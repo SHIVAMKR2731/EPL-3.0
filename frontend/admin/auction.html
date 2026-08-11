@@ -58,7 +58,7 @@
 
           <!-- BIDDING & SALES ACTION BAR -->
           <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-color);">
-            <div style="display:grid;grid-template-columns:1fr 120px 140px;gap:0.75rem;margin-bottom:1rem;">
+            <div style="display:grid;grid-template-columns:1fr 120px 140px;gap:0.75rem;margin-bottom:0.75rem;">
               <select id="admin-bid-team-select" class="form-control">
                 <option value="">Select Bidding Team...</option>
               </select>
@@ -68,10 +68,18 @@
               <button class="btn btn-primary" onclick="adminPlaceBid()">PLACE BID 🔨</button>
             </div>
 
+            <div style="display:flex;gap:0.5rem;margin-bottom:1rem;align-items:center;">
+              <span style="font-size:0.85rem;color:var(--text-muted);">Quick Add:</span>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(500)">+₹500</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(1000)">+₹1,000</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(2000)">+₹2,000</button>
+            </div>
+
             <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
               <button class="btn btn-success" onclick="adminSellPlayer()">🟢 SELL PLAYER</button>
               <button class="btn btn-danger" onclick="adminMarkUnsold()">🔴 MARK UNSOLD</button>
               <button class="btn btn-outline" onclick="adminTogglePause()">⏸️ PAUSE / RESUME</button>
+              <button class="btn btn-outline" style="border-color:var(--cyan-accent);color:var(--cyan-accent);" onclick="adminResetTimer()">⏱️ RESET TIMER (30s)</button>
               <button class="btn btn-gold" onclick="adminStartAuctionForPlayer(null)">NEXT PLAYER ⏩</button>
             </div>
           </div>

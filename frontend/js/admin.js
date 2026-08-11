@@ -264,6 +264,31 @@ async function adminPlaceBid() {
   } catch (err) {}
 }
 
+function adminQuickAddBid(amount) {
+  const inputEl = document.getElementById('admin-bid-amount-input');
+  if (!inputEl) return;
+
+  const currentBidEl = document.getElementById('admin-current-bid');
+  let baseVal = 0;
+  if (currentBidEl) {
+    baseVal = parseInt(currentBidEl.textContent.replace(/[^0-9]/g, ''), 10) || 0;
+  }
+
+  let existingInputVal = parseInt(inputEl.value, 10) || baseVal;
+  inputEl.value = existingInputVal + amount;
+}
+
+async function adminResetTimer() {
+  try {
+    const res = await apiRequest('/api/auction/admin/reset-timer', 'POST');
+    if (res.success) {
+      showToast(res.message, 'success');
+      startAdminLocalTimer(30);
+      loadAdminAuctionState();
+    }
+  } catch (err) {}
+}
+
 async function adminSellPlayer() {
   if (!confirm('Are you sure you want to SELL this player to the highest bidder?')) return;
   try {

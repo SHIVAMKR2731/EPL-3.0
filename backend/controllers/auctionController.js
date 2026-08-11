@@ -397,6 +397,22 @@ async function togglePause(req, res) {
   }
 }
 
+async function resetTimer(req, res) {
+  try {
+    await db.execute("UPDATE auctions SET timer_seconds = 30, status = 'AUCTION_RUNNING' WHERE id = 1");
+
+    await logAudit(req.admin.username, 'RESET_AUCTION_TIMER', 'Auction timer reset to 30s');
+
+    if (ioInstance) {
+      ioInstance.emit('auction_timer_tick', { timer_seconds: 30, status: 'AUCTION_RUNNING' });
+    }
+
+    res.json({ success: true, message: 'Auction timer reset to 30 seconds' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Failed to reset auction timer' });
+  }
+}
+
 module.exports = {
   setSocketInstance,
   getPublicAuctionState,
@@ -405,5 +421,6 @@ module.exports = {
   placeBid,
   sellPlayer,
   markUnsold,
-  togglePause
+  togglePause,
+  resetTimer
 };
