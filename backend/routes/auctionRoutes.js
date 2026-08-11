@@ -14,5 +14,6 @@ router.post('/admin/sell', authenticateAdmin, auctionController.sellPlayer);
 router.post('/admin/unsold', authenticateAdmin, auctionController.markUnsold);
 router.post('/admin/toggle-pause', authenticateAdmin, auctionController.togglePause);
 router.post('/admin/reset-timer', authenticateAdmin, auctionController.resetTimer);
+router.post('/admin/re-auction-unsold', authenticateAdmin, auctionController.reAuctionUnsold);
 
 module.exports = router;

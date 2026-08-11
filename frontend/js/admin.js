@@ -289,6 +289,17 @@ async function adminResetTimer() {
   } catch (err) {}
 }
 
+async function adminReAuctionUnsold() {
+  if (!confirm('Re-introduce all UNSOLD players back into the live auction queue for Round 2?')) return;
+  try {
+    const res = await apiRequest('/api/auction/admin/re-auction-unsold', 'POST');
+    if (res.success) {
+      showToast(res.message, 'success');
+      loadAdminAuctionState();
+    }
+  } catch (err) {}
+}
+
 async function adminSellPlayer() {
   if (!confirm('Are you sure you want to SELL this player to the highest bidder?')) return;
   try {

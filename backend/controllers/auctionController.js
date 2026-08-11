@@ -153,7 +153,17 @@ async function startAuction(req, res) {
     }
 
     if (!targetPlayer) {
-      return res.status(400).json({ success: false, message: 'No available player in queue to auction' });
+      const unsoldCheck = await db.get("SELECT COUNT(*) as cnt FROM players WHERE status = 'UNSOLD'");
+      const unsoldCnt = unsoldCheck ? unsoldCheck.cnt : 0;
+      if (unsoldCnt > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Main player queue completed! You have ${unsoldCnt} unsold players available. Click "RE-AUCTION UNSOLD PLAYERS" to start Round 2.`,
+          has_unsold: true,
+          unsold_count: unsoldCnt
+        });
+      }
+      return res.status(400).json({ success: false, message: 'All players in the league have been auctioned!' });
     }
 
     // Set target player status to AUCTIONING
@@ -413,6 +423,38 @@ async function resetTimer(req, res) {
   }
 }
 
+async function reAuctionUnsold(req, res) {
+  try {
+    const count = await db.get("SELECT COUNT(*) as cnt FROM players WHERE status = 'UNSOLD'");
+    const totalUnsold = count ? count.cnt : 0;
+
+    if (totalUnsold === 0) {
+      return res.status(400).json({ success: false, message: 'No unsold players to re-introduce into auction queue.' });
+    }
+
+    // Reset all UNSOLD players back to AVAILABLE for Round 2 Auction
+    await db.execute("UPDATE players SET status = 'AVAILABLE' WHERE status = 'UNSOLD'");
+
+    await logAudit(req.admin.username, 'RE_AUCTION_UNSOLD', `Re-introduced ${totalUnsold} unsold players into auction queue`);
+
+    if (ioInstance) {
+      ioInstance.emit('auction_status_changed', { 
+        message: `🔄 Round 2 Auction Started: ${totalUnsold} unsold players re-introduced!`,
+        status: 'IDLE'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: `Successfully re-introduced ${totalUnsold} unsold players into the auction queue for Round 2!`,
+      count: totalUnsold
+    });
+  } catch (err) {
+    console.error('Error re-auctioning unsold players:', err);
+    res.status(500).json({ success: false, message: 'Failed to re-introduce unsold players' });
+  }
+}
+
 module.exports = {
   setSocketInstance,
   getPublicAuctionState,
@@ -422,5 +464,6 @@ module.exports = {
   sellPlayer,
   markUnsold,
   togglePause,
-  resetTimer
+  resetTimer,
+  reAuctionUnsold
 };
