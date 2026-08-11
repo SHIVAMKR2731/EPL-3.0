@@ -67,19 +67,54 @@ async function loadDashboardMetrics() {
 
 // -------------------------------------------------------------------
 // ADMIN AUCTION CONTROL PANEL
-// -------------------------------------------------------------------
+let adminTimerSeconds = 30;
+let adminLocalTimerInterval = null;
+let isAdminAuctionRunning = false;
+
+function startAdminLocalTimer(seconds) {
+  if (seconds !== undefined && seconds !== null) {
+    adminTimerSeconds = seconds;
+  }
+  const el = document.getElementById('admin-timer-display');
+  if (el) el.textContent = `00:${adminTimerSeconds < 10 ? '0' + adminTimerSeconds : adminTimerSeconds}`;
+
+  if (!adminLocalTimerInterval) {
+    adminLocalTimerInterval = setInterval(() => {
+      if (isAdminAuctionRunning && adminTimerSeconds > 0) {
+        adminTimerSeconds--;
+        const timerEl = document.getElementById('admin-timer-display');
+        if (timerEl) timerEl.textContent = `00:${adminTimerSeconds < 10 ? '0' + adminTimerSeconds : adminTimerSeconds}`;
+      }
+    }, 1000);
+  }
+}
+
 async function initAdminAuction() {
   loadAdminAuctionState();
   const socket = getSocket();
   if (socket) {
     socket.emit('join_admin_auction');
-    socket.on('auction_started', () => loadAdminAuctionState());
-    socket.on('bid_updated', () => loadAdminAuctionState());
-    socket.on('player_sold', () => loadAdminAuctionState());
-    socket.on('player_unsold', () => loadAdminAuctionState());
+    socket.on('auction_started', (data) => {
+      isAdminAuctionRunning = true;
+      loadAdminAuctionState();
+      if (data && data.timer_seconds !== undefined) startAdminLocalTimer(data.timer_seconds);
+    });
+    socket.on('bid_updated', (data) => {
+      isAdminAuctionRunning = true;
+      loadAdminAuctionState();
+      if (data && data.timer_seconds !== undefined) startAdminLocalTimer(data.timer_seconds);
+    });
+    socket.on('player_sold', () => {
+      isAdminAuctionRunning = false;
+      loadAdminAuctionState();
+    });
+    socket.on('player_unsold', () => {
+      isAdminAuctionRunning = false;
+      loadAdminAuctionState();
+    });
     socket.on('auction_timer_tick', (data) => {
-      const el = document.getElementById('admin-timer-display');
-      if (el) el.textContent = `00:${data.timer_seconds < 10 ? '0' + data.timer_seconds : data.timer_seconds}`;
+      isAdminAuctionRunning = true;
+      startAdminLocalTimer(data.timer_seconds);
     });
   }
 }

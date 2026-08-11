@@ -8,7 +8,12 @@ function initSocket() {
       ? window.location.origin
       : 'https://epl3-backend.onrender.com';
 
-    socket = io(serverUrl);
+    socket = io(serverUrl, {
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: 20,
+      reconnectionDelay: 1000
+    });
 
     socket.on('connect', () => {
       console.log('⚡ Connected to EPL 3.0 Real-Time Socket Server');

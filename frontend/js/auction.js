@@ -91,6 +91,26 @@ function renderBidStage(currentBid, currentTeam, status) {
   }
 }
 
+let currentTimerSeconds = 30;
+let localTimerInterval = null;
+let isAuctionRunning = false;
+
+function startLocalTimer(seconds) {
+  if (seconds !== undefined && seconds !== null) {
+    currentTimerSeconds = seconds;
+  }
+  renderTimer(currentTimerSeconds);
+
+  if (!localTimerInterval) {
+    localTimerInterval = setInterval(() => {
+      if (isAuctionRunning && currentTimerSeconds > 0) {
+        currentTimerSeconds--;
+        renderTimer(currentTimerSeconds);
+      }
+    }, 1000);
+  }
+}
+
 function renderTimer(seconds) {
   const elTimer = document.getElementById('auction-timer');
   if (!elTimer) return;
@@ -146,7 +166,7 @@ function renderUnsoldPlayers(unsoldList) {
   if (!container) return;
 
   if (!unsoldList || unsoldList.length === 0) {
-    container.innerHTML = `<div style="color:var(--text-muted);font-size:0.85rem;padding:1rem;">No unsold players.</div>`;
+    container.innerHTML = `<div style="color:var(--text-muted);font-size:0.85rem;padding:1rem;">No unsold players yet.</div>`;
     return;
   }
 
@@ -169,30 +189,39 @@ function setupSocketListeners() {
 
   socket.on('auction_started', (data) => {
     showToast(`📢 Auction Started for ${data.current_player.name}!`, 'info');
+    isAuctionRunning = true;
     renderCurrentPlayer(data.current_player);
     renderBidStage(data.current_bid, data.current_team, data.status);
+    startLocalTimer(data.timer_seconds || 30);
   });
 
   socket.on('bid_updated', (data) => {
+    isAuctionRunning = true;
     renderBidStage(data.current_bid, data.current_team, 'AUCTION_RUNNING');
-    renderTimer(data.timer_seconds);
+    currentTimerSeconds = data.timer_seconds !== undefined ? data.timer_seconds : 30;
+    startLocalTimer(currentTimerSeconds);
   });
 
   socket.on('auction_timer_tick', (data) => {
-    renderTimer(data.timer_seconds);
+    isAuctionRunning = true;
+    currentTimerSeconds = data.timer_seconds;
+    startLocalTimer(currentTimerSeconds);
   });
 
   socket.on('player_sold', (data) => {
+    isAuctionRunning = false;
     showToast(`🟢 SOLD! ${data.player.name} sold to ${data.team.name} for ₹${data.player.final_price}!`, 'success');
-    loadAuctionState(); // Refresh feeds and budgets
+    loadAuctionState();
   });
 
   socket.on('player_unsold', (data) => {
+    isAuctionRunning = false;
     showToast(`🔴 Player Marked UNSOLD`, 'warning');
     loadAuctionState();
   });
 
   socket.on('auction_status_changed', (data) => {
+    if (data.status !== 'AUCTION_RUNNING') isAuctionRunning = false;
     loadAuctionState();
   });
 }
