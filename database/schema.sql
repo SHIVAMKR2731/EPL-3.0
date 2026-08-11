@@ -1,0 +1,135 @@
+-- EPL 3.0 FOOTBALL LEAGUE MANAGEMENT & LIVE AUCTION PLATFORM
+-- DATABASE SCHEMA (MySQL Compatible)
+
+CREATE TABLE IF NOT EXISTS admins (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  role VARCHAR(20) DEFAULT 'admin',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS teams (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  logo VARCHAR(255) DEFAULT '/uploads/teams/default.png',
+  captain_name VARCHAR(100) DEFAULT '',
+  owner_name VARCHAR(100) DEFAULT '',
+  initial_budget INT DEFAULT 10000,
+  remaining_budget INT DEFAULT 10000,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS players (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  contact_number VARCHAR(20) DEFAULT '',
+  batch VARCHAR(50) NOT NULL,
+  branch VARCHAR(50) NOT NULL,
+  position VARCHAR(30) NOT NULL, -- Forward, Midfielder, Defender, Goalkeeper
+  base_price INT DEFAULT 500,
+  status VARCHAR(20) DEFAULT 'REGISTERED', -- REGISTERED, AVAILABLE, AUCTIONING, SOLD, UNSOLD
+  team_id INT NULL,
+  final_price INT DEFAULT 0,
+  image VARCHAR(255) DEFAULT '/uploads/players/default.png',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS auctions (
+  id INT PRIMARY KEY DEFAULT 1,
+  current_player_id INT NULL,
+  status VARCHAR(20) DEFAULT 'IDLE', -- IDLE, RUNNING, PAUSED, SOLD, UNSOLD
+  current_bid INT DEFAULT 0,
+  current_team_id INT NULL,
+  timer_seconds INT DEFAULT 30,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (current_player_id) REFERENCES players(id) ON DELETE SET NULL,
+  FOREIGN KEY (current_team_id) REFERENCES teams(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS auction_bids (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  player_id INT NOT NULL,
+  team_id INT NOT NULL,
+  bid_amount INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE,
+  FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS matches (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  match_number INT NOT NULL,
+  match_name VARCHAR(100) DEFAULT '',
+  date VARCHAR(50) NOT NULL,
+  time VARCHAR(50) NOT NULL,
+  venue VARCHAR(150) DEFAULT 'Main Stadium',
+  team_a_id INT NOT NULL,
+  team_b_id INT NOT NULL,
+  team_a_score INT DEFAULT 0,
+  team_b_score INT DEFAULT 0,
+  status VARCHAR(20) DEFAULT 'UPCOMING', -- UPCOMING, LIVE, HALFTIME, PAUSED, COMPLETED, POSTPONED
+  half INT DEFAULT 1,
+  current_minute INT DEFAULT 0,
+  timer_started_at BIGINT DEFAULT NULL,
+  timer_accumulated_seconds INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (team_a_id) REFERENCES teams(id) ON DELETE CASCADE,
+  FOREIGN KEY (team_b_id) REFERENCES teams(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS match_events (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  match_id INT NOT NULL,
+  team_id INT NOT NULL,
+  player_id INT NOT NULL,
+  assist_player_id INT NULL,
+  event_type VARCHAR(30) NOT NULL, -- GOAL, OWN_GOAL, PENALTY, YELLOW_CARD, RED_CARD, SUBSTITUTION
+  minute INT NOT NULL,
+  details VARCHAR(255) DEFAULT '',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (match_id) REFERENCES matches(id) ON DELETE CASCADE,
+  FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE,
+  FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS points_table (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  team_id INT UNIQUE NOT NULL,
+  played INT DEFAULT 0,
+  won INT DEFAULT 0,
+  drawn INT DEFAULT 0,
+  lost INT DEFAULT 0,
+  goals_for INT DEFAULT 0,
+  goals_against INT DEFAULT 0,
+  goal_difference INT DEFAULT 0,
+  points INT DEFAULT 0,
+  FOREIGN KEY (team_id) REFERENCES teams(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS player_statistics (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  player_id INT UNIQUE NOT NULL,
+  matches_played INT DEFAULT 0,
+  goals INT DEFAULT 0,
+  assists INT DEFAULT 0,
+  yellow_cards INT DEFAULT 0,
+  red_cards INT DEFAULT 0,
+  minutes_played INT DEFAULT 0,
+  FOREIGN KEY (player_id) REFERENCES players(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS tournament_settings (
+  key_name VARCHAR(50) PRIMARY KEY,
+  value_data TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  admin_username VARCHAR(50) NOT NULL,
+  action VARCHAR(100) NOT NULL,
+  details TEXT DEFAULT '',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

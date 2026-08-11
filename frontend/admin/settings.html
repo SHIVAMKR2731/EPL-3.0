@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Tournament Settings — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body data-admin-page="settings">
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.4rem;">👑</span> EPL 3.0 ADMIN
+      </div>
+
+      <ul class="admin-menu">
+        <li><a href="/admin/dashboard.html">📊 Dashboard</a></li>
+        <li><a href="/admin/auction.html">🔨 Auction Control</a></li>
+        <li><a href="/admin/players.html">🏃 Player Database</a></li>
+        <li><a href="/admin/teams.html">🛡️ Team Manager</a></li>
+        <li><a href="/admin/matches.html">📅 Match Scheduler</a></li>
+        <li><a href="/admin/scoring.html">⚽ Live Scoring</a></li>
+        <li><a href="/admin/settings.html" class="active">⚙️ Settings</a></li>
+        <li><a href="#" id="admin-logout-btn" style="color:var(--crimson-accent);margin-top:2rem;">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+      
+      <div style="margin-bottom:1.5rem;">
+        <h1 style="font-size:2rem;">TOURNAMENT SETTINGS & RULES</h1>
+        <p style="color:var(--text-muted);">Configure tournament name, points rules, auction budget limits, and default player base prices.</p>
+      </div>
+
+      <div class="glass-card" style="max-width:700px;">
+        <form onsubmit="event.preventDefault(); adminSaveSettingsSubmit();">
+          <div class="form-group">
+            <label>Tournament Name</label>
+            <input type="text" id="setting-tournament-name" class="form-control" value="EPL 3.0 College Football League" required>
+          </div>
+
+          <div class="form-group">
+            <label>Tournament Dates</label>
+            <input type="text" id="setting-tournament-dates" class="form-control" value="August 10 - August 25, 2026" required>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label>Default Team Budget (₹)</label>
+              <input type="number" id="setting-team-budget" class="form-control" value="10000" required>
+            </div>
+            <div class="form-group">
+              <label>Default Player Base Price (₹)</label>
+              <input type="number" id="setting-base-price" class="form-control" value="500" required>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label>Points for Win</label>
+              <input type="number" id="setting-win-points" class="form-control" value="3" required>
+            </div>
+            <div class="form-group">
+              <label>Points for Draw</label>
+              <input type="number" id="setting-draw-points" class="form-control" value="1" required>
+            </div>
+            <div class="form-group">
+              <label>Points for Loss</label>
+              <input type="number" id="setting-loss-points" class="form-control" value="0" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Default Venue</label>
+            <input type="text" id="setting-venue" class="form-control" value="College Main Stadium Ground" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Save Settings 💾</button>
+        </form>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', loadAdminSettings);
+
+    async function loadAdminSettings() {
+      try {
+        const res = await apiRequest('/api/settings');
+        if (res.success && res.settings) {
+          const s = res.settings;
+          if (s.tournament_name) document.getElementById('setting-tournament-name').value = s.tournament_name;
+          if (s.tournament_dates) document.getElementById('setting-tournament-dates').value = s.tournament_dates;
+          if (s.default_team_budget) document.getElementById('setting-team-budget').value = s.default_team_budget;
+          if (s.default_base_price) document.getElementById('setting-base-price').value = s.default_base_price;
+          if (s.win_points) document.getElementById('setting-win-points').value = s.win_points;
+          if (s.draw_points) document.getElementById('setting-draw-points').value = s.draw_points;
+          if (s.loss_points) document.getElementById('setting-loss-points').value = s.loss_points;
+          if (s.venue) document.getElementById('setting-venue').value = s.venue;
+        }
+      } catch (err) {}
+    }
+
+    async function adminSaveSettingsSubmit() {
+      const data = {
+        tournament_name: document.getElementById('setting-tournament-name').value,
+        tournament_dates: document.getElementById('setting-tournament-dates').value,
+        default_team_budget: document.getElementById('setting-team-budget').value,
+        default_base_price: document.getElementById('setting-base-price').value,
+        win_points: document.getElementById('setting-win-points').value,
+        draw_points: document.getElementById('setting-draw-points').value,
+        loss_points: document.getElementById('setting-loss-points').value,
+        venue: document.getElementById('setting-venue').value
+      };
+
+      try {
+        const res = await apiRequest('/api/settings/admin/update', 'POST', data);
+        if (res.success) {
+          showToast(res.message, 'success');
+        }
+      } catch (err) {}
+    }
+  </script>
+</body>
+</html>

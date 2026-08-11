@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Football Match Center — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/match.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-icon">⚽</div>
+        <span>EPL 3.0</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/auction.html">Auction</a></li>
+        <li><a href="/teams.html">Teams</a></li>
+        <li><a href="/matches.html">Matches</a></li>
+        <li><a href="/live-match.html" class="active">Live Match</a></li>
+        <li><a href="/points-table.html">Points Table</a></li>
+        <li><a href="/players.html">Players</a></li>
+        <li><a href="/results.html">Results</a></li>
+      </ul>
+
+      <div id="nav-live-badge"></div>
+
+      <button class="hamburger" aria-label="Toggle navigation">☰</button>
+    </div>
+  </nav>
+
+  <!-- MAIN MATCH CENTER -->
+  <main class="container" style="max-width:1100px;">
+
+    <!-- SCOREBOARD CONTAINER -->
+    <div id="match-scoreboard-container">
+      <div class="glass-card" style="text-align:center;padding:3rem;">
+        <h3>Loading match center...</h3>
+      </div>
+    </div>
+
+    <!-- MATCH EVENTS & FORMATION LAYOUT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;">
+      
+      <!-- MATCH TIMELINE EVENTS -->
+      <div class="glass-card">
+        <h3 style="color:var(--cyan-accent);font-size:1.1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>⚽</span> MATCH TIMELINE EVENTS
+        </h3>
+        <div class="match-events-timeline" id="match-events-timeline">
+          <p style="color:var(--text-muted);text-align:center;">No match events recorded yet.</p>
+        </div>
+      </div>
+
+      <!-- TACTICAL PITCH LINEUPS -->
+      <div class="glass-card">
+        <h3 style="color:var(--primary-green);font-size:1.1rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>🏟️</span> TEAM FORMATIONS & LINEUPS
+        </h3>
+        <div id="formation-pitch-container">
+          <p style="color:var(--text-muted);text-align:center;padding:2rem;">Loading team lineups...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 EPL 3.0 College Football League. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/socket.js"></script>
+  <script src="/js/live-match.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

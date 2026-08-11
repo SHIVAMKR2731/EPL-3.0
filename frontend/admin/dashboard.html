@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body data-admin-page="dashboard">
+
+  <div class="admin-layout">
+    
+    <!-- ADMIN SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.4rem;">👑</span> EPL 3.0 ADMIN
+      </div>
+
+      <ul class="admin-menu">
+        <li><a href="/admin/dashboard.html" class="active">📊 Dashboard</a></li>
+        <li><a href="/admin/auction.html">🔨 Auction Control</a></li>
+        <li><a href="/admin/players.html">🏃 Player Database</a></li>
+        <li><a href="/admin/teams.html">🛡️ Team Manager</a></li>
+        <li><a href="/admin/matches.html">📅 Match Scheduler</a></li>
+        <li><a href="/admin/scoring.html">⚽ Live Scoring</a></li>
+        <li><a href="/admin/settings.html">⚙️ Settings</a></li>
+        <li><a href="#" id="admin-logout-btn" style="color:var(--crimson-accent);margin-top:2rem;">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- ADMIN CONTENT AREA -->
+    <main class="admin-content">
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+        <div>
+          <h1 style="font-size:2.2rem;">ADMINISTRATOR COMMAND CENTER</h1>
+          <p style="color:var(--text-muted);">Manage real-time auction bidding, player registrations, team budgets, and match fixtures.</p>
+        </div>
+        <a href="/index.html" target="_blank" class="btn btn-outline btn-sm">View Public Website ↗</a>
+      </div>
+
+      <!-- METRICS GRID -->
+      <div class="metrics-grid">
+        <div class="glass-card metric-card cyan">
+          <div class="metric-icon">🏃</div>
+          <div class="metric-info">
+            <div id="admin-total-players" class="metric-value">0</div>
+            <div class="metric-label">Total Players</div>
+          </div>
+        </div>
+
+        <div class="glass-card metric-card green">
+          <div class="metric-icon">🟢</div>
+          <div class="metric-info">
+            <div id="admin-sold-players" class="metric-value">0</div>
+            <div class="metric-label">Sold Players</div>
+          </div>
+        </div>
+
+        <div class="glass-card metric-card gold">
+          <div class="metric-icon">🛡️</div>
+          <div class="metric-info">
+            <div id="admin-total-teams" class="metric-value">0</div>
+            <div class="metric-label">Total Teams</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS LAUNCHER -->
+      <div class="glass-card" style="margin-top:2rem;">
+        <h3 style="color:var(--cyan-accent);font-size:1.2rem;margin-bottom:1.25rem;">QUICK ACTIONS LAUNCHER</h3>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="/admin/auction.html" class="btn btn-gold">START LIVE AUCTION 🔨</a>
+          <a href="/admin/players.html" class="btn btn-primary">IMPORT PLAYERS EXCEL 📁</a>
+          <a href="/admin/matches.html" class="btn btn-success">SCHEDULE MATCH 📅</a>
+          <a href="/admin/scoring.html" class="btn btn-danger">START LIVE SCORING ⚽</a>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

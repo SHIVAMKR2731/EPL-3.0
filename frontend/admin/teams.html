@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Teams Manager — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body data-admin-page="teams">
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.4rem;">👑</span> EPL 3.0 ADMIN
+      </div>
+
+      <ul class="admin-menu">
+        <li><a href="/admin/dashboard.html">📊 Dashboard</a></li>
+        <li><a href="/admin/auction.html">🔨 Auction Control</a></li>
+        <li><a href="/admin/players.html">🏃 Player Database</a></li>
+        <li><a href="/admin/teams.html" class="active">🛡️ Team Manager</a></li>
+        <li><a href="/admin/matches.html">📅 Match Scheduler</a></li>
+        <li><a href="/admin/scoring.html">⚽ Live Scoring</a></li>
+        <li><a href="/admin/settings.html">⚙️ Settings</a></li>
+        <li><a href="#" id="admin-logout-btn" style="color:var(--crimson-accent);margin-top:2rem;">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <h1 style="font-size:2rem;">TEAM MANAGEMENT</h1>
+          <p style="color:var(--text-muted);">Create teams, configure auction budget limits, and manage team captains.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal('create-team-modal')">+ Create New Team</button>
+      </div>
+
+      <!-- TEAMS GRID -->
+      <div id="admin-teams-list" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:1.5rem;">
+        <p style="color:var(--text-muted);">Loading teams...</p>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- CREATE TEAM MODAL -->
+  <div class="modal-overlay" id="create-team-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>CREATE NEW TEAM</h3>
+        <button class="close-modal" onclick="closeModal('create-team-modal')">&times;</button>
+      </div>
+
+      <form id="admin-create-team-form" onsubmit="adminCreateTeamSubmit(event)">
+        <div class="form-group">
+          <label>Team Name</label>
+          <input type="text" name="name" class="form-control" placeholder="e.g. Tigers FC" required>
+        </div>
+
+        <div class="form-group">
+          <label>Captain Name</label>
+          <input type="text" name="captain_name" class="form-control" placeholder="e.g. Rahul Kumar">
+        </div>
+
+        <div class="form-group">
+          <label>Owner Name</label>
+          <input type="text" name="owner_name" class="form-control" placeholder="e.g. Dr. S. Sharma">
+        </div>
+
+        <div class="form-group">
+          <label>Initial Auction Budget (₹)</label>
+          <input type="number" name="initial_budget" class="form-control" value="10000" required>
+        </div>
+
+        <div class="form-group">
+          <label>Team Logo Image</label>
+          <input type="file" name="teamLogo" class="form-control" accept="image/*">
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('create-team-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Team 🛡️</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

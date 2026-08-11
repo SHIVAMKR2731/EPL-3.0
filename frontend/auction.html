@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Player Auction — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auction.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-icon">⚽</div>
+        <span>EPL 3.0</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/auction.html" class="active">Auction</a></li>
+        <li><a href="/teams.html">Teams</a></li>
+        <li><a href="/matches.html">Matches</a></li>
+        <li><a href="/live-match.html">Live Match</a></li>
+        <li><a href="/points-table.html">Points Table</a></li>
+        <li><a href="/players.html">Players</a></li>
+        <li><a href="/results.html">Results</a></li>
+      </ul>
+
+      <div id="nav-live-badge"></div>
+
+      <button class="hamburger" aria-label="Toggle navigation">☰</button>
+    </div>
+  </nav>
+
+  <!-- MAIN BROADCAST AUCTION SCREEN -->
+  <main class="container" style="max-width:1400px;">
+    
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <span class="live-badge" style="font-size:0.9rem;padding:0.4rem 1.2rem;"><span class="pulse-dot"></span> 🔴 EPL 3.0 LIVE PLAYER AUCTION BROADCAST</span>
+    </div>
+
+    <!-- AUCTION 3-COLUMN BROADCAST GRID -->
+    <div class="auction-grid">
+      
+      <!-- LEFT: CURRENT PLAYER CARD -->
+      <div class="glass-card" id="current-player-card">
+        <div style="padding: 2.5rem 1rem; text-align: center; color: var(--text-muted);">
+          <h3>Loading active auction player...</h3>
+        </div>
+      </div>
+
+      <!-- CENTER: BID STAGE & TIMER -->
+      <div class="glass-card bid-stage-card">
+        <div class="auction-status-banner" id="auction-status-banner">AUCTION RUNNING</div>
+
+        <div style="color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.25rem;">CURRENT HIGHEST BID</div>
+        <div class="current-bid-amount" id="current-bid-amount">₹0</div>
+
+        <div class="highest-bidder-info" id="highest-bidder-info">
+          <span style="color:var(--text-muted);font-size:0.85rem;">NO BIDS PLACED YET</span>
+        </div>
+
+        <div class="timer-box" id="auction-timer">⏱ 00:30</div>
+      </div>
+
+      <!-- RIGHT: TEAM BUDGET LEADERBOARD -->
+      <div class="glass-card">
+        <h3 style="color:var(--cyan-accent);font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>💰</span> TEAM BUDGETS
+        </h3>
+        <div class="team-budget-list" id="team-budgets-list">
+          <p style="color:var(--text-muted);font-size:0.85rem;">Loading team budgets...</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BOTTOM: SOLD & UNSOLD PLAYER FEEDS -->
+    <div class="auction-tables-section">
+      
+      <!-- SOLD PLAYERS -->
+      <div class="glass-card">
+        <h3 style="color:var(--primary-green);font-size:1.1rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>🟢</span> SOLD PLAYERS
+        </h3>
+        <div class="player-grid-mini" id="sold-players-grid">
+          <p style="color:var(--text-muted);font-size:0.85rem;">No players sold yet.</p>
+        </div>
+      </div>
+
+      <!-- UNSOLD PLAYERS -->
+      <div class="glass-card">
+        <h3 style="color:var(--crimson-accent);font-size:1.1rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>🔴</span> UNSOLD PLAYERS
+        </h3>
+        <div class="player-grid-mini" id="unsold-players-grid">
+          <p style="color:var(--text-muted);font-size:0.85rem;">No unsold players.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 EPL 3.0 College Football League. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/socket.js"></script>
+  <script src="/js/auction.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

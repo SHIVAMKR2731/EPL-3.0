@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPL 3.0 — The Ultimate College Football League</title>
+  <meta name="description" content="Official platform for EPL 3.0 College Football Tournament, Live Player Auction, Real-Time Scoring, Points Table & Team Squads.">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-icon">⚽</div>
+        <span>EPL 3.0</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html" class="active">Home</a></li>
+        <li><a href="/auction.html">Auction</a></li>
+        <li><a href="/teams.html">Teams</a></li>
+        <li><a href="/matches.html">Matches</a></li>
+        <li><a href="/live-match.html">Live Match</a></li>
+        <li><a href="/points-table.html">Points Table</a></li>
+        <li><a href="/players.html">Players</a></li>
+        <li><a href="/results.html">Results</a></li>
+      </ul>
+
+      <div id="nav-live-badge"></div>
+
+      <button class="hamburger" aria-label="Toggle navigation">☰</button>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero-badge">⚽ OFFICIAL TOURNAMENT PLATFORM</div>
+    <h1 class="hero-title">EPL 3.0</h1>
+    <p class="hero-subtitle">THE ULTIMATE COLLEGE FOOTBALL LEAGUE & LIVE AUCTION PLATFORM</p>
+    
+    <div class="hero-actions">
+      <a href="/auction.html" class="btn btn-gold">LIVE AUCTION 🔴</a>
+      <a href="/live-match.html" class="btn btn-danger">LIVE MATCH ⚽</a>
+      <a href="/points-table.html" class="btn btn-primary">POINTS TABLE 📊</a>
+      <a href="/teams.html" class="btn btn-outline">TEAMS 🛡️</a>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="container">
+
+    <!-- METRICS GRID -->
+    <div class="metrics-grid">
+      <div class="glass-card metric-card cyan">
+        <div class="metric-icon">🏃</div>
+        <div class="metric-info">
+          <div id="metric-total-players" class="metric-value">20+</div>
+          <div class="metric-label">Registered Players</div>
+        </div>
+      </div>
+
+      <div class="glass-card metric-card green">
+        <div class="metric-icon">🟢</div>
+        <div class="metric-info">
+          <div id="metric-sold-players" class="metric-value">5</div>
+          <div class="metric-label">Auctioned & Sold</div>
+        </div>
+      </div>
+
+      <div class="glass-card metric-card gold">
+        <div class="metric-icon">🛡️</div>
+        <div class="metric-info">
+          <div id="metric-total-teams" class="metric-value">4</div>
+          <div class="metric-label">Competing Teams</div>
+        </div>
+      </div>
+
+      <div class="glass-card metric-card purple">
+        <div class="metric-icon">🏆</div>
+        <div class="metric-info">
+          <div class="metric-value">₹10,000</div>
+          <div class="metric-label">Team Budget Cap</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME FEATURE WIDGETS -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));gap:1.5rem;margin-bottom:3rem;">
+      
+      <!-- CURRENT LEAGUE LEADER -->
+      <div class="glass-card">
+        <h3 style="color:var(--gold-accent);font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>🏆</span> LEAGUE LEADER
+        </h3>
+        <div id="widget-league-leader">
+          <p style="color:var(--text-muted);">Loading standings...</p>
+        </div>
+      </div>
+
+      <!-- UPCOMING CLASH COUNTDOWN -->
+      <div class="glass-card">
+        <h3 style="color:var(--cyan-accent);font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+          <span>🔥</span> UPCOMING CLASH
+        </h3>
+        <div id="widget-upcoming-clash">
+          <p style="color:var(--text-muted);">Loading next fixture...</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 EPL 3.0 College Football League. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/socket.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

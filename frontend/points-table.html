@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>League Points Table — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/index.html" class="brand-logo">
+        <div class="logo-icon">⚽</div>
+        <span>EPL 3.0</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/auction.html">Auction</a></li>
+        <li><a href="/teams.html">Teams</a></li>
+        <li><a href="/matches.html">Matches</a></li>
+        <li><a href="/live-match.html">Live Match</a></li>
+        <li><a href="/points-table.html" class="active">Points Table</a></li>
+        <li><a href="/players.html">Players</a></li>
+        <li><a href="/results.html">Results</a></li>
+      </ul>
+
+      <div id="nav-live-badge"></div>
+
+      <button class="hamburger" aria-label="Toggle navigation">☰</button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="container">
+    <div style="margin-bottom:2rem;text-align:center;">
+      <h1 style="font-size:2.5rem;">LEAGUE STANDINGS & POINTS TABLE</h1>
+      <p style="color:var(--text-muted);">Real-time standings automatically sorted by Points, Goal Difference, and Goals For.</p>
+    </div>
+
+    <!-- POINTS TABLE CARD -->
+    <div class="glass-card">
+      <div class="admin-table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th style="width:60px;">POS</th>
+              <th>TEAM</th>
+              <th style="text-align:center;">P</th>
+              <th style="text-align:center;">W</th>
+              <th style="text-align:center;">D</th>
+              <th style="text-align:center;">L</th>
+              <th style="text-align:center;">GF</th>
+              <th style="text-align:center;">GA</th>
+              <th style="text-align:center;">GD</th>
+              <th style="text-align:center;">PTS</th>
+            </tr>
+          </thead>
+          <tbody id="points-table-body">
+            <tr>
+              <td colspan="10" style="text-align:center;color:var(--text-muted);padding:2rem;">Loading points table...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 EPL 3.0 College Football League. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/socket.js"></script>
+  <script src="/js/points-table.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

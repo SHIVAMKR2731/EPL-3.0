@@ -1,0 +1,95 @@
+/* RESPONSIVE DESIGN BREAKPOINTS */
+
+@media (max-width: 1024px) {
+  .auction-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .admin-sidebar {
+    width: 200px;
+  }
+
+  .admin-content {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+    padding: 1.5rem;
+  }
+
+  .scoreboard-body {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .score-digits {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(7, 9, 14, 0.98);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .admin-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .auction-tables-section {
+    grid-template-columns: 1fr;
+  }
+
+  .match-events-timeline::before {
+    left: 10px;
+  }
+
+  .event-row.left, .event-row.right {
+    padding-left: 45px;
+    padding-right: 0;
+    justify-content: flex-start;
+  }
+
+  .event-minute-pin {
+    left: 10px;
+    transform: none;
+  }
+}

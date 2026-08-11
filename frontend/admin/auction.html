@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Auction Control — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auction.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body data-admin-page="auction">
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.4rem;">👑</span> EPL 3.0 ADMIN
+      </div>
+
+      <ul class="admin-menu">
+        <li><a href="/admin/dashboard.html">📊 Dashboard</a></li>
+        <li><a href="/admin/auction.html" class="active">🔨 Auction Control</a></li>
+        <li><a href="/admin/players.html">🏃 Player Database</a></li>
+        <li><a href="/admin/teams.html">🛡️ Team Manager</a></li>
+        <li><a href="/admin/matches.html">📅 Match Scheduler</a></li>
+        <li><a href="/admin/scoring.html">⚽ Live Scoring</a></li>
+        <li><a href="/admin/settings.html">⚙️ Settings</a></li>
+        <li><a href="#" id="admin-logout-btn" style="color:var(--crimson-accent);margin-top:2rem;">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <h1 style="font-size:2rem;">LIVE AUCTION CONTROL CENTER</h1>
+          <p style="color:var(--text-muted);">Manage real-time bidding, trigger player sales, pause countdowns, and preview upcoming queue.</p>
+        </div>
+        <span class="badge" id="admin-auction-status" style="font-size:1rem;padding:0.5rem 1rem;background:rgba(6,182,212,0.15);color:var(--cyan-accent);">IDLE</span>
+      </div>
+
+      <!-- MAIN AUCTION CONTROL BOARD (2 COLUMNS) -->
+      <div style="display:grid;grid-template-columns:1fr 360px;gap:1.5rem;margin-bottom:2rem;">
+        
+        <!-- LEFT: CURRENT PLAYER & BID ACTIONS -->
+        <div class="glass-card">
+          <h3 style="color:var(--gold-accent);font-size:1.1rem;margin-bottom:1rem;">CURRENT PLAYER IN STAGE</h3>
+          
+          <div id="admin-current-player-box">
+            <p style="color:var(--text-muted);">Loading current player...</p>
+          </div>
+
+          <!-- NEXT PLAYER CARD (ADMIN VIEW ONLY!) -->
+          <div id="admin-next-player-box"></div>
+
+          <!-- BIDDING & SALES ACTION BAR -->
+          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border-color);">
+            <div style="display:grid;grid-template-columns:1fr 120px 140px;gap:0.75rem;margin-bottom:1rem;">
+              <select id="admin-bid-team-select" class="form-control">
+                <option value="">Select Bidding Team...</option>
+              </select>
+
+              <input type="number" id="admin-bid-amount-input" class="form-control" placeholder="Bid (₹)" step="100">
+
+              <button class="btn btn-primary" onclick="adminPlaceBid()">PLACE BID 🔨</button>
+            </div>
+
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+              <button class="btn btn-success" onclick="adminSellPlayer()">🟢 SELL PLAYER</button>
+              <button class="btn btn-danger" onclick="adminMarkUnsold()">🔴 MARK UNSOLD</button>
+              <button class="btn btn-outline" onclick="adminTogglePause()">⏸️ PAUSE / RESUME</button>
+              <button class="btn btn-gold" onclick="adminStartAuctionForPlayer(null)">NEXT PLAYER ⏩</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: BID STATUS DISPLAY -->
+        <div class="glass-card" style="text-align:center;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(circle at center, rgba(245,158,11,0.08) 0%, var(--bg-card-solid) 80%);">
+          <div style="font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;">CURRENT BID</div>
+          <div id="admin-current-bid" style="font-family:var(--font-heading);font-size:3.5rem;font-weight:900;color:#fff;">₹0</div>
+          
+          <div style="margin:1rem 0;font-size:1.1rem;font-weight:700;color:var(--primary-green);" id="admin-current-team">
+            No Bids
+          </div>
+
+          <div class="timer-box" style="margin:0 auto;" id="admin-timer-display">⏱ 00:30</div>
+        </div>
+
+      </div>
+
+      <!-- QUEUE & UNSOLD TABLES -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+        
+        <!-- UPCOMING AUCTION QUEUE -->
+        <div class="glass-card">
+          <h3 style="color:var(--cyan-accent);font-size:1.1rem;margin-bottom:1rem;">UPCOMING QUEUE</h3>
+          <div class="admin-table-wrapper" style="max-height:350px;overflow-y:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>NAME</th>
+                  <th>POSITION</th>
+                  <th>BRANCH</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="admin-queue-tbody">
+                <tr><td colspan="5" style="text-align:center;color:var(--text-muted);">Loading queue...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- UNSOLD PLAYERS MANAGER -->
+        <div class="glass-card">
+          <h3 style="color:var(--crimson-accent);font-size:1.1rem;margin-bottom:1rem;">UNSOLD PLAYERS (RE-AUCTION)</h3>
+          <div class="admin-table-wrapper" style="max-height:350px;overflow-y:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>POSITION</th>
+                  <th>BASE PRICE</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="admin-unsold-tbody">
+                <tr><td colspan="4" style="text-align:center;color:var(--text-muted);">Loading unsold...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/socket.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

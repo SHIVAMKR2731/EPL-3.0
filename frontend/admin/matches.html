@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Match Scheduler — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body data-admin-page="matches">
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.4rem;">👑</span> EPL 3.0 ADMIN
+      </div>
+
+      <ul class="admin-menu">
+        <li><a href="/admin/dashboard.html">📊 Dashboard</a></li>
+        <li><a href="/admin/auction.html">🔨 Auction Control</a></li>
+        <li><a href="/admin/players.html">🏃 Player Database</a></li>
+        <li><a href="/admin/teams.html">🛡️ Team Manager</a></li>
+        <li><a href="/admin/matches.html" class="active">📅 Match Scheduler</a></li>
+        <li><a href="/admin/scoring.html">⚽ Live Scoring</a></li>
+        <li><a href="/admin/settings.html">⚙️ Settings</a></li>
+        <li><a href="#" id="admin-logout-btn" style="color:var(--crimson-accent);margin-top:2rem;">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <h1 style="font-size:2rem;">MATCH FIXTURES & SCHEDULER</h1>
+          <p style="color:var(--text-muted);">Create tournament matches, assign venues, and launch real-time live scoring center.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openCreateMatchModal()">+ Schedule New Match</button>
+      </div>
+
+      <!-- MATCHES TABLE -->
+      <div class="glass-card">
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>MATCH #</th>
+                <th>FIXTURE</th>
+                <th>DATE & TIME</th>
+                <th>VENUE</th>
+                <th>STATUS</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="admin-matches-tbody">
+              <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:2rem;">Loading match fixtures...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- CREATE MATCH MODAL -->
+  <div class="modal-overlay" id="create-match-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>SCHEDULE NEW MATCH</h3>
+        <button class="close-modal" onclick="closeModal('create-match-modal')">&times;</button>
+      </div>
+
+      <form id="admin-create-match-form" onsubmit="adminCreateMatchSubmit(event)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Team A</label>
+            <select id="match-team-a-select" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label>Team B</label>
+            <select id="match-team-b-select" class="form-control" required></select>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" id="match-date-input" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Time</label>
+            <input type="text" id="match-time-input" class="form-control" placeholder="05:30 PM" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Venue</label>
+          <input type="text" id="match-venue-input" class="form-control" value="Main Football Ground" required>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('create-match-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Schedule Match 📅</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    async function openCreateMatchModal() {
+      const res = await apiRequest('/api/teams');
+      if (res.success && res.teams) {
+        const selA = document.getElementById('match-team-a-select');
+        const selB = document.getElementById('match-team-b-select');
+        selA.innerHTML = res.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+        selB.innerHTML = res.teams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+        if (res.teams.length > 1) selB.selectedIndex = 1;
+      }
+      openModal('create-match-modal');
+    }
+  </script>
+</body>
+</html>

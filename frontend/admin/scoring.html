@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Live Scoring — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body data-admin-page="scoring">
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.4rem;">👑</span> EPL 3.0 ADMIN
+      </div>
+
+      <ul class="admin-menu">
+        <li><a href="/admin/dashboard.html">📊 Dashboard</a></li>
+        <li><a href="/admin/auction.html">🔨 Auction Control</a></li>
+        <li><a href="/admin/players.html">🏃 Player Database</a></li>
+        <li><a href="/admin/teams.html">🛡️ Team Manager</a></li>
+        <li><a href="/admin/matches.html">📅 Match Scheduler</a></li>
+        <li><a href="/admin/scoring.html" class="active">⚽ Live Scoring</a></li>
+        <li><a href="/admin/settings.html">⚙️ Settings</a></li>
+        <li><a href="#" id="admin-logout-btn" style="color:var(--crimson-accent);margin-top:2rem;">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <h1 style="font-size:2rem;">LIVE MATCH CONTROL & SCORING PANEL</h1>
+          <p style="color:var(--text-muted);">Record goals, assists, yellow/red cards, manage match timer, and finalize match results.</p>
+        </div>
+      </div>
+
+      <!-- MATCH DISPLAY HEADER -->
+      <div class="glass-card" style="text-align:center;padding:2rem;margin-bottom:2rem;background:linear-gradient(180deg, rgba(6,182,212,0.08) 0%, var(--bg-card-solid) 100%);">
+        <h2 id="scoring-match-title" style="font-size:2.2rem;margin-bottom:0.5rem;">Select a match to score</h2>
+        <div id="scoring-match-score" style="font-family:var(--font-heading);font-size:3.5rem;font-weight:900;color:var(--gold-accent);">0 - 0</div>
+        
+        <div style="display:flex;justify-content:center;gap:1rem;margin-top:1.5rem;">
+          <button class="btn btn-danger" onclick="adminStartLiveMatch()">START MATCH / KICKOFF ⚽</button>
+          <button class="btn btn-success" onclick="openRecordGoalModal()">+ RECORD GOAL ⚽</button>
+          <button class="btn btn-gold" onclick="openRecordCardModal()">+ RECORD CARD 🟨</button>
+          <button class="btn btn-outline" onclick="adminFinishMatch()">🏁 FULL TIME & UPDATE STANDINGS</button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- RECORD GOAL MODAL -->
+  <div class="modal-overlay" id="record-goal-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>RECORD GOAL ⚽</h3>
+        <button class="close-modal" onclick="closeModal('record-goal-modal')">&times;</button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); adminRecordGoalSubmit();">
+        <div class="form-group">
+          <label>Scoring Team</label>
+          <select id="goal-team-select" class="form-control" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Goal Scorer (Playing Squad)</label>
+          <select id="goal-scorer-select" class="form-control" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Assist Player (Optional)</label>
+          <select id="goal-assist-select" class="form-control"></select>
+        </div>
+
+        <div class="form-group">
+          <label>Match Minute (1 - 90')</label>
+          <input type="number" id="goal-minute-input" class="form-control" value="15" min="1" max="120" required>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('record-goal-modal')">Cancel</button>
+          <button type="submit" class="btn btn-success">Save Goal ⚽</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- RECORD CARD MODAL -->
+  <div class="modal-overlay" id="record-card-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>RECORD CARD 🟨 🟥</h3>
+        <button class="close-modal" onclick="closeModal('record-card-modal')">&times;</button>
+      </div>
+
+      <form onsubmit="event.preventDefault(); adminRecordCardSubmit();">
+        <div class="form-group">
+          <label>Card Type</label>
+          <select id="card-type-select" class="form-control" required>
+            <option value="YELLOW_CARD">Yellow Card 🟨</option>
+            <option value="RED_CARD">Red Card 🟥</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Team</label>
+          <select id="card-team-select" class="form-control" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Player</label>
+          <select id="card-player-select" class="form-control" required></select>
+        </div>
+
+        <div class="form-group">
+          <label>Minute</label>
+          <input type="number" id="card-minute-input" class="form-control" value="30" required>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('record-card-modal')">Cancel</button>
+          <button type="submit" class="btn btn-gold">Save Card 🟨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/socket.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    async function openRecordGoalModal() {
+      if (!currentScoringMatchId) return;
+      const res = await apiRequest(`/api/matches/${currentScoringMatchId}`);
+      if (res.success) {
+        const selTeam = document.getElementById('goal-team-select');
+        selTeam.innerHTML = `
+          <option value="${res.match.team_a_id}">${res.match.team_a_name}</option>
+          <option value="${res.match.team_b_id}">${res.match.team_b_name}</option>
+        `;
+        openModal('record-goal-modal');
+      }
+    }
+
+    async function openRecordCardModal() {
+      if (!currentScoringMatchId) return;
+      const res = await apiRequest(`/api/matches/${currentScoringMatchId}`);
+      if (res.success) {
+        const selTeam = document.getElementById('card-team-select');
+        const selPlayer = document.getElementById('card-player-select');
+        selTeam.innerHTML = `
+          <option value="${res.match.team_a_id}">${res.match.team_a_name}</option>
+          <option value="${res.match.team_b_id}">${res.match.team_b_name}</option>
+        `;
+        const all = [...(res.lineups.team_a || []), ...(res.lineups.team_b || [])];
+        selPlayer.innerHTML = all.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        openModal('record-card-modal');
+      }
+    }
+
+    async function adminRecordCardSubmit() {
+      const type = document.getElementById('card-type-select').value;
+      const teamId = document.getElementById('card-team-select').value;
+      const playerId = document.getElementById('card-player-select').value;
+      const minute = document.getElementById('card-minute-input').value;
+
+      try {
+        const res = await apiRequest(`/api/matches/admin/${currentScoringMatchId}/event`, 'POST', {
+          team_id: teamId,
+          player_id: playerId,
+          event_type: type,
+          minute: minute || 1
+        });
+        if (res.success) {
+          showToast('Card event recorded successfully', 'warning');
+          closeModal('record-card-modal');
+        }
+      } catch (err) {}
+    }
+  </script>
+</body>
+</html>

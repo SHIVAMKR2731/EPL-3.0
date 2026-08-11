@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — EPL 3.0 Platform</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body style="align-items:center;justify-content:center;padding:1.5rem;">
+
+  <div class="glass-card" style="width:100%;max-width:420px;padding:2.5rem;text-align:center;box-shadow:var(--shadow-glow);">
+    <div style="width:60px;height:60px;background:linear-gradient(135deg, var(--cyan-accent), var(--primary-green));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1rem auto;box-shadow:var(--shadow-glow);">
+      👑
+    </div>
+
+    <h2 style="font-size:1.8rem;margin-bottom:0.25rem;">ADMIN PORTAL</h2>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:2rem;">EPL 3.0 League Management System</p>
+
+    <form id="admin-login-form">
+      <div class="form-group" style="text-align:left;">
+        <label for="admin-username">Username</label>
+        <input type="text" id="admin-username" class="form-control" placeholder="Enter username (admin)" required value="admin">
+      </div>
+
+      <div class="form-group" style="text-align:left;">
+        <label for="admin-password">Password</label>
+        <input type="password" id="admin-password" class="form-control" placeholder="Enter password (admin123)" required value="admin123">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:1rem;">LOG IN TO DASHBOARD 🚀</button>
+    </form>
+
+    <div style="margin-top:1.5rem;font-size:0.8rem;color:var(--text-muted);">
+      <span>Default Demo Credentials: <strong>admin</strong> / <strong>admin123</strong></span>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

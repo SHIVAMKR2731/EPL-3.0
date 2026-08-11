@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Players Management — EPL 3.0</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body data-admin-page="players">
+
+  <div class="admin-layout">
+    
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <span style="font-size:1.4rem;">👑</span> EPL 3.0 ADMIN
+      </div>
+
+      <ul class="admin-menu">
+        <li><a href="/admin/dashboard.html">📊 Dashboard</a></li>
+        <li><a href="/admin/auction.html">🔨 Auction Control</a></li>
+        <li><a href="/admin/players.html" class="active">🏃 Player Database</a></li>
+        <li><a href="/admin/teams.html">🛡️ Team Manager</a></li>
+        <li><a href="/admin/matches.html">📅 Match Scheduler</a></li>
+        <li><a href="/admin/scoring.html">⚽ Live Scoring</a></li>
+        <li><a href="/admin/settings.html">⚙️ Settings</a></li>
+        <li><a href="#" id="admin-logout-btn" style="color:var(--crimson-accent);margin-top:2rem;">🚪 Logout</a></li>
+      </ul>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="admin-content">
+      
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <h1 style="font-size:2rem;">PLAYER DATABASE MANAGEMENT</h1>
+          <p style="color:var(--text-muted);">Manage player registrations, private contact numbers, and bulk Excel/CSV import.</p>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+          <button class="btn btn-primary btn-sm" onclick="openModal('create-player-modal')">+ Add Single Player</button>
+          <button class="btn btn-gold btn-sm" onclick="openModal('excel-import-modal')">📁 Import Excel / CSV</button>
+        </div>
+      </div>
+
+      <!-- PLAYERS DATA TABLE -->
+      <div class="glass-card">
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>PLAYER NAME</th>
+                <th>CONTACT NO. (ADMIN ONLY)</th>
+                <th>BRANCH & BATCH</th>
+                <th>POSITION</th>
+                <th>BASE PRICE</th>
+                <th>STATUS</th>
+                <th>TEAM</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="admin-players-tbody">
+              <tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:2rem;">Loading player database...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- EXCEL IMPORT MODAL -->
+  <div class="modal-overlay" id="excel-import-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>IMPORT PLAYERS FROM EXCEL / CSV</h3>
+        <button class="close-modal" onclick="closeModal('excel-import-modal')">&times;</button>
+      </div>
+
+      <div class="dropzone" onclick="document.getElementById('excel-file-input').click()">
+        <div style="font-size:2.5rem;margin-bottom:0.5rem;">📁</div>
+        <div style="font-weight:700;font-size:1.1rem;margin-bottom:0.25rem;">Click to Upload Excel or CSV file</div>
+        <div style="font-size:0.8rem;color:var(--text-muted);">Supports .xlsx, .xls, and .csv files. Automatic column mapping for Name, Contact No., Batch, Branch, Position, Image.</div>
+        <input type="file" id="excel-file-input" accept=".xlsx, .xls, .csv" style="display:none;" onchange="document.getElementById('selected-filename-label').textContent = this.files[0].name">
+        <div id="selected-filename-label" style="margin-top:0.75rem;font-weight:700;color:var(--cyan-accent);"></div>
+      </div>
+
+      <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+        <button class="btn btn-outline" onclick="closeModal('excel-import-modal')">Cancel</button>
+        <button class="btn btn-gold" onclick="adminUploadExcelFile()">Confirm & Import Players 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE SINGLE PLAYER MODAL -->
+  <div class="modal-overlay" id="create-player-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>ADD NEW PLAYER</h3>
+        <button class="close-modal" onclick="closeModal('create-player-modal')">&times;</button>
+      </div>
+
+      <form id="admin-create-player-form" onsubmit="event.preventDefault(); adminCreateSinglePlayerSubmit();">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="new-player-name" class="form-control" placeholder="e.g. Rahul Kumar" required>
+        </div>
+
+        <div class="form-group">
+          <label>Contact Number (Private Admin Info)</label>
+          <input type="text" id="new-player-contact" class="form-control" placeholder="+91 9876543210">
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Branch</label>
+            <input type="text" id="new-player-branch" class="form-control" placeholder="CSE" required>
+          </div>
+          <div class="form-group">
+            <label>Batch / Year</label>
+            <input type="text" id="new-player-batch" class="form-control" placeholder="3rd Year" required>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Playing Position</label>
+            <select id="new-player-position" class="form-control" required>
+              <option value="Forward">Forward</option>
+              <option value="Midfielder">Midfielder</option>
+              <option value="Defender">Defender</option>
+              <option value="Goalkeeper">Goalkeeper</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Base Price (₹)</label>
+            <input type="number" id="new-player-baseprice" class="form-control" value="500" required>
+          </div>
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('create-player-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Player 💾</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+  <script>
+    async function adminCreateSinglePlayerSubmit() {
+      const name = document.getElementById('new-player-name').value;
+      const contact = document.getElementById('new-player-contact').value;
+      const branch = document.getElementById('new-player-branch').value;
+      const batch = document.getElementById('new-player-batch').value;
+      const position = document.getElementById('new-player-position').value;
+      const basePrice = document.getElementById('new-player-baseprice').value;
+
+      try {
+        const res = await apiRequest('/api/players/admin/create', 'POST', {
+          name, contact_number: contact, branch, batch, position, base_price: basePrice
+        });
+        if (res.success) {
+          showToast(res.message, 'success');
+          loadAdminPlayers();
+          closeModal('create-player-modal');
+        }
+      } catch (err) {}
+    }
+  </script>
+</body>
+</html>
