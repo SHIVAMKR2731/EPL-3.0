@@ -4,7 +4,11 @@ let socket = null;
 
 function initSocket() {
   if (typeof io !== 'undefined') {
-    socket = io();
+    const serverUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? window.location.origin
+      : 'https://epl3-backend.onrender.com';
+
+    socket = io(serverUrl);
 
     socket.on('connect', () => {
       console.log('⚡ Connected to EPL 3.0 Real-Time Socket Server');

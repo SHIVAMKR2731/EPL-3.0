@@ -1,8 +1,8 @@
 [build]
   publish = "frontend"
 
-# Pass API requests directly to the deployed backend server if using proxy
+# Pass API requests directly to the deployed Render backend server
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR-BACKEND-URL.onrender.com/api/:splat"
+  to = "https://epl3-backend.onrender.com/api/:splat"
   status = 200
