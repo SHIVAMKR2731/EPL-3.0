@@ -3,6 +3,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   loadAuctionState();
   setupSocketListeners();
+
+  // Auto-polling backup every 3 seconds for 100% hands-free instant updates
+  setInterval(loadAuctionState, 3000);
 });
 
 async function loadAuctionState() {

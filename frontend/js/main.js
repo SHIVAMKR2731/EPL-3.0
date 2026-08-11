@@ -1,8 +1,9 @@
-/* HOME PAGE & GENERAL UI LOGIC */
+/* HOME PAGE & GENERAL UI LOGIC WITH GLOBAL REAL-TIME TICKER */
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
   loadHomeWidgets();
+  initGlobalAuctionTicker();
 });
 
 function initNavbar() {
@@ -82,5 +83,89 @@ async function loadHomeWidgets() {
     }
   } catch (err) {
     console.error('Home widgets error:', err);
+  }
+}
+
+/* GLOBAL REAL-TIME LIVE AUCTION BROADCAST TICKER */
+function initGlobalAuctionTicker() {
+  const socket = getSocket();
+  if (!socket) return;
+
+  socket.on('auction_started', (data) => {
+    updateGlobalTicker(data.current_player, data.current_bid, data.current_team, data.status);
+  });
+
+  socket.on('bid_updated', (data) => {
+    updateGlobalTicker(null, data.current_bid, data.current_team, 'AUCTION_RUNNING');
+  });
+
+  socket.on('auction_timer_tick', (data) => {
+    updateGlobalTickerTimer(data.timer_seconds);
+  });
+
+  socket.on('player_sold', () => {
+    removeGlobalTicker();
+  });
+
+  socket.on('player_unsold', () => {
+    removeGlobalTicker();
+  });
+}
+
+function updateGlobalTicker(player, bidAmount, team, status) {
+  if (window.location.pathname.endsWith('/auction.html')) return;
+
+  let banner = document.getElementById('global-live-auction-ticker');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'global-live-auction-ticker';
+    banner.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #0f172a, rgba(6,182,212,0.95), #0f172a);
+      color: #fff;
+      padding: 0.6rem 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      z-index: 9999;
+      box-shadow: 0 4px 20px rgba(6,182,212,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    `;
+    document.body.appendChild(banner);
+    document.body.style.paddingTop = '45px';
+  }
+
+  const pName = player ? player.name : (banner.dataset.playerName || 'Live Player');
+  if (player) banner.dataset.playerName = player.name;
+
+  const tName = team ? team.name : 'No Bids';
+  const bidVal = bidAmount ? `₹${bidAmount.toLocaleString()}` : 'Base Price';
+
+  banner.innerHTML = `
+    <span class="pulse-dot" style="display:inline-block;width:10px;height:10px;background:#ef4444;border-radius:50%;"></span>
+    <span>🔴 LIVE AUCTION: <strong>${pName}</strong> | Bid: <strong style="color:#f59e0b;">${bidVal}</strong> (${tName})</span>
+    <span id="global-ticker-timer" style="background:rgba(0,0,0,0.3);padding:0.2rem 0.6rem;border-radius:12px;">⏱ 00:30</span>
+    <a href="/auction.html" style="background:#10b981;color:#fff;padding:0.25rem 0.75rem;border-radius:12px;text-decoration:none;font-size:0.8rem;">WATCH LIVE ➔</a>
+  `;
+}
+
+function updateGlobalTickerTimer(seconds) {
+  const elTimer = document.getElementById('global-ticker-timer');
+  if (elTimer) {
+    elTimer.textContent = `⏱ 00:${seconds < 10 ? '0' + seconds : seconds}`;
+  }
+}
+
+function removeGlobalTicker() {
+  const banner = document.getElementById('global-live-auction-ticker');
+  if (banner) {
+    banner.remove();
+    document.body.style.paddingTop = '0px';
   }
 }
