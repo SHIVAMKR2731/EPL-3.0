@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables
+.env
+
+# Native build artifacts
+build/
+*.node
+
+# SQLite Local Database (Render will generate it on server)
+database/*.sqlite
+
+# Uploads temporary files
+uploads/temp/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
