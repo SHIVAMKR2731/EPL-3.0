@@ -1,6 +1,4 @@
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-  ? window.location.origin
-  : 'https://epl3-backend.onrender.com';
+const API_BASE = window.location.origin;
 
 async function apiRequest(endpoint, method = 'GET', data = null, isFormData = false) {
   const headers = {};

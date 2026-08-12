@@ -1,8 +1,10 @@
 /* PUBLIC PLAYERS LISTING & STATS LOGIC */
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadPlayersList();
-  loadPlayerLeaderboards();
+  Promise.all([
+    loadPlayersList(),
+    loadPlayerLeaderboards()
+  ]).catch(console.error);
 });
 
 async function loadPlayersList() {
@@ -26,7 +28,7 @@ async function loadPlayersList() {
 
     container.innerHTML = res.players.map(p => `
       <div class="glass-card" style="text-align:center;position:relative;">
-        <img src="${p.image}" style="width:90px;height:90px;border-radius:50%;margin-bottom:0.75rem;object-fit:cover;" alt="${p.name}" referrerpolicy="no-referrer">
+        <img src="${p.image}" loading="lazy" style="width:90px;height:90px;border-radius:50%;margin-bottom:0.75rem;object-fit:cover;" alt="${p.name}" referrerpolicy="no-referrer">
         <h3 style="font-size:1.25rem;margin-bottom:0.25rem;">${p.name}</h3>
         <div style="display:flex;justify-content:center;gap:0.4rem;margin-bottom:0.75rem;">
           <span class="badge badge-position">${p.position}</span>

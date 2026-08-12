@@ -335,6 +335,22 @@ async function setupTables() {
         ('venue', 'College Main Stadium Ground');
       `);
     }
+
+    // Performance Indexes
+    const indexStatements = [
+      'CREATE INDEX IF NOT EXISTS idx_players_team ON players(team_id)',
+      'CREATE INDEX IF NOT EXISTS idx_players_status ON players(status)',
+      'CREATE INDEX IF NOT EXISTS idx_players_position ON players(position)',
+      'CREATE INDEX IF NOT EXISTS idx_matches_status ON matches(status)',
+      'CREATE INDEX IF NOT EXISTS idx_events_match ON match_events(match_id)',
+      'CREATE INDEX IF NOT EXISTS idx_points_team ON points_table(team_id)',
+      'CREATE INDEX IF NOT EXISTS idx_stats_player ON player_statistics(player_id)'
+    ];
+    for (const stmt of indexStatements) {
+      try {
+        await sqliteDb.runAsync(stmt);
+      } catch (idxErr) {}
+    }
   }
 }
 

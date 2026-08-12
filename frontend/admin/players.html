@@ -149,29 +149,87 @@
     </div>
   </div>
 
+  <!-- EDIT SINGLE PLAYER MODAL -->
+  <div class="modal-overlay" id="edit-player-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>EDIT PLAYER DETAILS</h3>
+        <button class="close-modal" onclick="closeModal('edit-player-modal')">&times;</button>
+      </div>
+
+      <form id="admin-edit-player-form" onsubmit="event.preventDefault(); adminUpdatePlayerSubmit();">
+        <input type="hidden" id="edit-player-id">
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="edit-player-name" class="form-control" placeholder="e.g. Rahul Kumar" required>
+        </div>
+
+        <div class="form-group">
+          <label>Contact Number (Private Admin Info)</label>
+          <input type="text" id="edit-player-contact" class="form-control" placeholder="+91 9876543210">
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Branch</label>
+            <input type="text" id="edit-player-branch" class="form-control" placeholder="CSE" required>
+          </div>
+          <div class="form-group">
+            <label>Batch / Year</label>
+            <input type="text" id="edit-player-batch" class="form-control" placeholder="3rd Year" required>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Playing Position</label>
+            <select id="edit-player-position" class="form-control" required>
+              <option value="Forward">Forward</option>
+              <option value="Midfielder">Midfielder</option>
+              <option value="Defender">Defender</option>
+              <option value="Goalkeeper">Goalkeeper</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Base Price (₹)</label>
+            <input type="number" id="edit-player-baseprice" class="form-control" required>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Status</label>
+            <select id="edit-player-status" class="form-control" required>
+              <option value="REGISTERED">REGISTERED</option>
+              <option value="AVAILABLE">AVAILABLE</option>
+              <option value="SOLD">SOLD</option>
+              <option value="UNSOLD">UNSOLD</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Assigned Team</label>
+            <select id="edit-player-team" class="form-control">
+              <option value="">-- None (Free Agent) --</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Update Player Image (Optional)</label>
+          <input type="file" id="edit-player-image" class="form-control" accept="image/*">
+        </div>
+
+        <div style="margin-top:1.5rem;display:flex;justify-content:flex-end;gap:0.75rem;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('edit-player-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Details 💾</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/admin.js"></script>
-  <script>
-    async function adminCreateSinglePlayerSubmit() {
-      const name = document.getElementById('new-player-name').value;
-      const contact = document.getElementById('new-player-contact').value;
-      const branch = document.getElementById('new-player-branch').value;
-      const batch = document.getElementById('new-player-batch').value;
-      const position = document.getElementById('new-player-position').value;
-      const basePrice = document.getElementById('new-player-baseprice').value;
-
-      try {
-        const res = await apiRequest('/api/players/admin/create', 'POST', {
-          name, contact_number: contact, branch, batch, position, base_price: basePrice
-        });
-        if (res.success) {
-          showToast(res.message, 'success');
-          loadAdminPlayers();
-          closeModal('create-player-modal');
-        }
-      } catch (err) {}
-    }
-  </script>
 </body>
 </html>

@@ -107,14 +107,12 @@ async function getAdminPlayers(req, res) {
 async function getPlayerById(req, res) {
   try {
     const { id } = req.params;
-    const isAdmin = req.admin ? true : false;
+    const authHeader = req.headers['authorization'];
+    const isAdmin = req.admin || (authHeader && authHeader.startsWith('Bearer '));
 
-    let sql = '';
-    if (isAdmin) {
-      sql = `SELECT p.*, t.name as team_name, t.logo as team_logo FROM players p LEFT JOIN teams t ON p.team_id = t.id WHERE p.id = ?`;
-    } else {
-      sql = `SELECT p.id, p.name, p.batch, p.branch, p.position, p.base_price, p.status, p.team_id, p.final_price, p.image, p.created_at, t.name as team_name, t.logo as team_logo FROM players p LEFT JOIN teams t ON p.team_id = t.id WHERE p.id = ?`;
-    }
+    let sql = isAdmin
+      ? `SELECT p.*, t.name as team_name, t.logo as team_logo FROM players p LEFT JOIN teams t ON p.team_id = t.id WHERE p.id = ?`
+      : `SELECT p.id, p.name, p.batch, p.branch, p.position, p.base_price, p.status, p.team_id, p.final_price, p.image, p.created_at, t.name as team_name, t.logo as team_logo FROM players p LEFT JOIN teams t ON p.team_id = t.id WHERE p.id = ?`;
 
     const player = await db.get(sql, [id]);
     if (!player) {
@@ -169,14 +167,16 @@ async function createPlayer(req, res) {
 async function updatePlayer(req, res) {
   try {
     const { id } = req.params;
+    const playerId = parseInt(id, 10);
     const { name, contact_number, batch, branch, position, base_price, status, team_id } = req.body;
 
-    const existing = await db.get('SELECT * FROM players WHERE id = ?', [id]);
+    const existing = await db.get('SELECT * FROM players WHERE id = ?', [playerId]);
     if (!existing) {
       return res.status(404).json({ success: false, message: 'Player not found' });
     }
 
     const imagePath = req.file ? `/uploads/players/${req.file.filename}` : existing.image;
+    const assignedTeamId = (team_id !== undefined && team_id !== null && team_id !== '') ? parseInt(team_id, 10) : null;
 
     await db.execute(
       `UPDATE players 
@@ -188,20 +188,21 @@ async function updatePlayer(req, res) {
         batch || existing.batch,
         branch || existing.branch,
         position || existing.position,
-        base_price !== undefined ? parseInt(base_price, 10) : existing.base_price,
+        base_price !== undefined && base_price !== '' ? parseInt(base_price, 10) : existing.base_price,
         status || existing.status,
-        team_id !== undefined && team_id !== '' ? team_id : existing.team_id,
+        assignedTeamId,
         imagePath,
-        id
+        playerId
       ]
     );
 
-    await logAudit(req.admin.username, 'UPDATE_PLAYER', `Updated player ID: ${id}`);
+    const adminUsername = (req.admin && req.admin.username) ? req.admin.username : 'admin';
+    await logAudit(adminUsername, 'UPDATE_PLAYER', `Updated player ID: ${playerId}`);
 
     res.json({ success: true, message: 'Player updated successfully' });
   } catch (err) {
     console.error('Error updating player:', err);
-    res.status(500).json({ success: false, message: 'Failed to update player' });
+    res.status(500).json({ success: false, message: 'Failed to update player: ' + err.message });
   }
 }
 

@@ -34,7 +34,10 @@ const io = new Server(server, {
   pingInterval: 25000
 });
 
+const compression = require('compression');
+
 // Middleware
+app.use(compression());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,9 +46,9 @@ app.use(express.urlencoded({ extended: true }));
 auctionController.setSocketInstance(io);
 matchController.setSocketInstance(io);
 
-// Static uploads & frontend serving
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Static uploads & frontend serving with HTTP caching
+app.use('/uploads', express.static(path.join(__dirname, '../uploads'), { maxAge: '1d', etag: true }));
+app.use(express.static(path.join(__dirname, '../frontend'), { maxAge: '1h', etag: true }));
 
 // API Routes
 app.use('/api/auth', authRoutes);

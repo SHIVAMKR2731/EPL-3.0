@@ -92,45 +92,5 @@
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/admin.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', loadAdminSettings);
-
-    async function loadAdminSettings() {
-      try {
-        const res = await apiRequest('/api/settings');
-        if (res.success && res.settings) {
-          const s = res.settings;
-          if (s.tournament_name) document.getElementById('setting-tournament-name').value = s.tournament_name;
-          if (s.tournament_dates) document.getElementById('setting-tournament-dates').value = s.tournament_dates;
-          if (s.default_team_budget) document.getElementById('setting-team-budget').value = s.default_team_budget;
-          if (s.default_base_price) document.getElementById('setting-base-price').value = s.default_base_price;
-          if (s.win_points) document.getElementById('setting-win-points').value = s.win_points;
-          if (s.draw_points) document.getElementById('setting-draw-points').value = s.draw_points;
-          if (s.loss_points) document.getElementById('setting-loss-points').value = s.loss_points;
-          if (s.venue) document.getElementById('setting-venue').value = s.venue;
-        }
-      } catch (err) {}
-    }
-
-    async function adminSaveSettingsSubmit() {
-      const data = {
-        tournament_name: document.getElementById('setting-tournament-name').value,
-        tournament_dates: document.getElementById('setting-tournament-dates').value,
-        default_team_budget: document.getElementById('setting-team-budget').value,
-        default_base_price: document.getElementById('setting-base-price').value,
-        win_points: document.getElementById('setting-win-points').value,
-        draw_points: document.getElementById('setting-draw-points').value,
-        loss_points: document.getElementById('setting-loss-points').value,
-        venue: document.getElementById('setting-venue').value
-      };
-
-      try {
-        const res = await apiRequest('/api/settings/admin/update', 'POST', data);
-        if (res.success) {
-          showToast(res.message, 'success');
-        }
-      } catch (err) {}
-    }
-  </script>
 </body>
 </html>

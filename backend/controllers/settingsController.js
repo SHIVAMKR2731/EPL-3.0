@@ -28,7 +28,8 @@ async function updateSettings(req, res) {
       }
     }
 
-    await logAudit(req.admin.username, 'UPDATE_SETTINGS', 'Updated tournament settings');
+    const adminUsername = (req.admin && req.admin.username) ? req.admin.username : 'admin';
+    await logAudit(adminUsername, 'UPDATE_SETTINGS', 'Updated tournament settings');
 
     res.json({ success: true, message: 'Settings updated successfully' });
   } catch (err) {

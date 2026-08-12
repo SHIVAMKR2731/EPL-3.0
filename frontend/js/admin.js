@@ -369,6 +369,107 @@ async function loadAdminPlayers() {
   }
 }
 
+async function adminCreateSinglePlayerSubmit() {
+  const name = document.getElementById('new-player-name') ? document.getElementById('new-player-name').value : '';
+  const contact = document.getElementById('new-player-contact') ? document.getElementById('new-player-contact').value : '';
+  const branch = document.getElementById('new-player-branch') ? document.getElementById('new-player-branch').value : '';
+  const batch = document.getElementById('new-player-batch') ? document.getElementById('new-player-batch').value : '';
+  const position = document.getElementById('new-player-position') ? document.getElementById('new-player-position').value : '';
+  const basePrice = document.getElementById('new-player-baseprice') ? document.getElementById('new-player-baseprice').value : 500;
+
+  try {
+    const res = await apiRequest('/api/players/admin/create', 'POST', {
+      name, contact_number: contact, branch, batch, position, base_price: basePrice
+    });
+    if (res.success) {
+      showToast(res.message, 'success');
+      loadAdminPlayers();
+      closeModal('create-player-modal');
+    }
+  } catch (err) {}
+}
+
+let adminCachedTeams = [];
+
+async function openEditPlayerModal(playerId) {
+  try {
+    if (!adminCachedTeams || adminCachedTeams.length === 0) {
+      const teamsRes = await apiRequest('/api/teams');
+      if (teamsRes.success && teamsRes.teams) adminCachedTeams = teamsRes.teams;
+    }
+
+    const teamSelect = document.getElementById('edit-player-team');
+    if (teamSelect) {
+      teamSelect.innerHTML = `<option value="">-- None (Free Agent) --</option>` +
+        adminCachedTeams.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+    }
+
+    const res = await apiRequest(`/api/players/${playerId}`);
+    if (res.success && res.player) {
+      const p = res.player;
+      if (document.getElementById('edit-player-id')) document.getElementById('edit-player-id').value = p.id;
+      if (document.getElementById('edit-player-name')) document.getElementById('edit-player-name').value = p.name || '';
+      if (document.getElementById('edit-player-contact')) document.getElementById('edit-player-contact').value = p.contact_number || '';
+      if (document.getElementById('edit-player-branch')) document.getElementById('edit-player-branch').value = p.branch || '';
+      if (document.getElementById('edit-player-batch')) document.getElementById('edit-player-batch').value = p.batch || '';
+      if (document.getElementById('edit-player-position')) document.getElementById('edit-player-position').value = p.position || 'Forward';
+      if (document.getElementById('edit-player-baseprice')) document.getElementById('edit-player-baseprice').value = p.base_price || 500;
+      if (document.getElementById('edit-player-status')) document.getElementById('edit-player-status').value = p.status || 'REGISTERED';
+      if (document.getElementById('edit-player-team')) document.getElementById('edit-player-team').value = p.team_id || '';
+
+      openModal('edit-player-modal');
+    }
+  } catch (err) {
+    console.error('Error fetching player details for edit:', err);
+  }
+}
+
+async function adminUpdatePlayerSubmit() {
+  const id = document.getElementById('edit-player-id') ? document.getElementById('edit-player-id').value : null;
+  if (!id) return;
+
+  const imageInput = document.getElementById('edit-player-image');
+  const hasImage = imageInput && imageInput.files && imageInput.files.length > 0;
+
+  try {
+    let res;
+    if (hasImage) {
+      const formData = new FormData();
+      formData.append('name', document.getElementById('edit-player-name').value);
+      formData.append('contact_number', document.getElementById('edit-player-contact').value);
+      formData.append('branch', document.getElementById('edit-player-branch').value);
+      formData.append('batch', document.getElementById('edit-player-batch').value);
+      formData.append('position', document.getElementById('edit-player-position').value);
+      formData.append('base_price', document.getElementById('edit-player-baseprice').value);
+      formData.append('status', document.getElementById('edit-player-status').value);
+      formData.append('team_id', document.getElementById('edit-player-team').value);
+      formData.append('image', imageInput.files[0]);
+
+      res = await apiRequest(`/api/players/admin/${id}`, 'PUT', formData, true);
+    } else {
+      const data = {
+        name: document.getElementById('edit-player-name').value,
+        contact_number: document.getElementById('edit-player-contact').value,
+        branch: document.getElementById('edit-player-branch').value,
+        batch: document.getElementById('edit-player-batch').value,
+        position: document.getElementById('edit-player-position').value,
+        base_price: document.getElementById('edit-player-baseprice').value,
+        status: document.getElementById('edit-player-status').value,
+        team_id: document.getElementById('edit-player-team').value
+      };
+      res = await apiRequest(`/api/players/admin/${id}`, 'PUT', data);
+    }
+
+    if (res.success) {
+      showToast(res.message, 'success');
+      closeModal('edit-player-modal');
+      loadAdminPlayers();
+    }
+  } catch (err) {
+    console.error('Error updating player:', err);
+  }
+}
+
 async function adminUploadExcelFile() {
   const input = document.getElementById('excel-file-input');
   if (!input.files || input.files.length === 0) {
@@ -398,6 +499,51 @@ async function adminDeletePlayer(id) {
       loadAdminPlayers();
     }
   } catch (err) {}
+}
+
+// -------------------------------------------------------------------
+// ADMIN TOURNAMENT SETTINGS
+// -------------------------------------------------------------------
+async function loadAdminSettings() {
+  try {
+    const res = await apiRequest('/api/settings');
+    if (res.success && res.settings) {
+      const s = res.settings;
+      if (s.tournament_name && document.getElementById('setting-tournament-name')) document.getElementById('setting-tournament-name').value = s.tournament_name;
+      if (s.tournament_dates && document.getElementById('setting-tournament-dates')) document.getElementById('setting-tournament-dates').value = s.tournament_dates;
+      if (s.default_team_budget && document.getElementById('setting-team-budget')) document.getElementById('setting-team-budget').value = s.default_team_budget;
+      if (s.default_base_price && document.getElementById('setting-base-price')) document.getElementById('setting-base-price').value = s.default_base_price;
+      if (s.win_points && document.getElementById('setting-win-points')) document.getElementById('setting-win-points').value = s.win_points;
+      if (s.draw_points && document.getElementById('setting-draw-points')) document.getElementById('setting-draw-points').value = s.draw_points;
+      if (s.loss_points && document.getElementById('setting-loss-points')) document.getElementById('setting-loss-points').value = s.loss_points;
+      if (s.venue && document.getElementById('setting-venue')) document.getElementById('setting-venue').value = s.venue;
+    }
+  } catch (err) {
+    console.error('Error loading tournament settings:', err);
+  }
+}
+
+async function adminSaveSettingsSubmit() {
+  const data = {
+    tournament_name: document.getElementById('setting-tournament-name') ? document.getElementById('setting-tournament-name').value : '',
+    tournament_dates: document.getElementById('setting-tournament-dates') ? document.getElementById('setting-tournament-dates').value : '',
+    default_team_budget: document.getElementById('setting-team-budget') ? document.getElementById('setting-team-budget').value : '',
+    default_base_price: document.getElementById('setting-base-price') ? document.getElementById('setting-base-price').value : '',
+    win_points: document.getElementById('setting-win-points') ? document.getElementById('setting-win-points').value : '',
+    draw_points: document.getElementById('setting-draw-points') ? document.getElementById('setting-draw-points').value : '',
+    loss_points: document.getElementById('setting-loss-points') ? document.getElementById('setting-loss-points').value : '',
+    venue: document.getElementById('setting-venue') ? document.getElementById('setting-venue').value : ''
+  };
+
+  try {
+    const res = await apiRequest('/api/settings/admin/update', 'POST', data);
+    if (res.success) {
+      showToast(res.message, 'success');
+      loadAdminSettings();
+    }
+  } catch (err) {
+    console.error('Error saving settings:', err);
+  }
 }
 
 // -------------------------------------------------------------------
