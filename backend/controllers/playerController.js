@@ -144,7 +144,7 @@ async function createPlayer(req, res) {
     const result = await db.execute(
       `INSERT INTO players (name, contact_number, batch, branch, position, base_price, image, status)
        VALUES (?, ?, ?, ?, ?, ?, ?, 'REGISTERED')`,
-      [name.trim(), contact_number || '', batch, branch, position, parseInt(base_price, 10) || 500, imagePath]
+      [name.trim(), contact_number || '', batch, branch, position, (base_price !== undefined && base_price !== '') ? parseInt(base_price, 10) : 20, imagePath]
     );
 
     // Initialize player statistics entry

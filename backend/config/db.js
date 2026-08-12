@@ -136,7 +136,7 @@ async function setupTables() {
         batch TEXT NOT NULL,
         branch TEXT NOT NULL,
         position TEXT NOT NULL,
-        base_price INTEGER DEFAULT 500,
+        base_price INTEGER DEFAULT 20,
         status TEXT DEFAULT 'REGISTERED',
         team_id INTEGER NULL,
         final_price INTEGER DEFAULT 0,
@@ -325,7 +325,7 @@ async function setupTables() {
       await sqliteDb.runAsync(`INSERT OR IGNORE INTO tournament_settings (key_name, value_data) VALUES
         ('tournament_name', 'EPL 3.0 College Football League'),
         ('tournament_dates', 'August 10 - August 25, 2026'),
-        ('default_base_price', '500'),
+        ('default_base_price', '20'),
         ('default_team_budget', '10000'),
         ('win_points', '3'),
         ('draw_points', '1'),
@@ -335,6 +335,17 @@ async function setupTables() {
         ('venue', 'College Main Stadium Ground');
       `);
     }
+
+    // Ensure default base price is updated to 20 in database
+    try {
+      if (dbDriver === 'sqlite') {
+        await sqliteDb.runAsync(`UPDATE tournament_settings SET value_data = '20' WHERE key_name = 'default_base_price' AND value_data = '500'`);
+        await sqliteDb.runAsync(`UPDATE players SET base_price = 20 WHERE base_price = 500`);
+      } else if (dbDriver === 'mysql' && pool) {
+        await pool.query(`UPDATE tournament_settings SET value_data = '20' WHERE key_name = 'default_base_price' AND value_data = '500'`);
+        await pool.query(`UPDATE players SET base_price = 20 WHERE base_price = 500`);
+      }
+    } catch (e) {}
 
     // Performance Indexes
     const indexStatements = [

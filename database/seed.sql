@@ -76,7 +76,7 @@ INSERT INTO match_events (match_id, team_id, player_id, assist_player_id, event_
 INSERT INTO tournament_settings (key_name, value_data) VALUES
 ('tournament_name', 'EPL 3.0 College Football League'),
 ('tournament_dates', 'August 10 - August 25, 2026'),
-('default_base_price', '500'),
+('default_base_price', '20'),
 ('default_team_budget', '10000'),
 ('win_points', '3'),
 ('draw_points', '1'),

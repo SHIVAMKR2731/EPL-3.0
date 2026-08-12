@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS players (
   batch VARCHAR(50) NOT NULL,
   branch VARCHAR(50) NOT NULL,
   position VARCHAR(30) NOT NULL, -- Forward, Midfielder, Defender, Goalkeeper
-  base_price INT DEFAULT 500,
+  base_price INT DEFAULT 20,
   status VARCHAR(20) DEFAULT 'REGISTERED', -- REGISTERED, AVAILABLE, AUCTIONING, SOLD, UNSOLD
   team_id INT NULL,
   final_price INT DEFAULT 0,

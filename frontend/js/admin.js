@@ -177,6 +177,12 @@ async function loadAdminAuctionState() {
     if (elTeam) elTeam.textContent = currentTeam ? currentTeam.name : 'No Bids';
     if (elStatus) elStatus.textContent = status;
 
+    const inputBid = document.getElementById('admin-bid-amount-input');
+    if (inputBid) {
+      const nextSuggestedBid = (currentBid && currentBid > 0) ? (currentBid + 10) : (current ? current.base_price : 20);
+      inputBid.value = nextSuggestedBid;
+    }
+
     // Team Selection Dropdown for Bidding
     const elTeamSelect = document.getElementById('admin-bid-team-select');
     if (elTeamSelect && res.teams) {
@@ -269,9 +275,9 @@ function adminQuickAddBid(amount) {
   if (!inputEl) return;
 
   const currentBidEl = document.getElementById('admin-current-bid');
-  let baseVal = 0;
+  let baseVal = 20;
   if (currentBidEl) {
-    baseVal = parseInt(currentBidEl.textContent.replace(/[^0-9]/g, ''), 10) || 0;
+    baseVal = parseInt(currentBidEl.textContent.replace(/[^0-9]/g, ''), 10) || 20;
   }
 
   let existingInputVal = parseInt(inputEl.value, 10) || baseVal;
@@ -413,7 +419,7 @@ async function openEditPlayerModal(playerId) {
       if (document.getElementById('edit-player-branch')) document.getElementById('edit-player-branch').value = p.branch || '';
       if (document.getElementById('edit-player-batch')) document.getElementById('edit-player-batch').value = p.batch || '';
       if (document.getElementById('edit-player-position')) document.getElementById('edit-player-position').value = p.position || 'Forward';
-      if (document.getElementById('edit-player-baseprice')) document.getElementById('edit-player-baseprice').value = p.base_price || 500;
+      if (document.getElementById('edit-player-baseprice')) document.getElementById('edit-player-baseprice').value = p.base_price || 20;
       if (document.getElementById('edit-player-status')) document.getElementById('edit-player-status').value = p.status || 'REGISTERED';
       if (document.getElementById('edit-player-team')) document.getElementById('edit-player-team').value = p.team_id || '';
 

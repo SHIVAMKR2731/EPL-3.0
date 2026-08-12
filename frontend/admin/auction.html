@@ -63,16 +63,17 @@
                 <option value="">Select Bidding Team...</option>
               </select>
 
-              <input type="number" id="admin-bid-amount-input" class="form-control" placeholder="Bid (₹)" step="100">
+              <input type="number" id="admin-bid-amount-input" class="form-control" placeholder="Bid (₹)" value="20" step="10">
 
               <button class="btn btn-primary" onclick="adminPlaceBid()">PLACE BID 🔨</button>
             </div>
 
             <div style="display:flex;gap:0.5rem;margin-bottom:1rem;align-items:center;">
-              <span style="font-size:0.85rem;color:var(--text-muted);">Quick Add:</span>
-              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(500)">+₹500</button>
-              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(1000)">+₹1,000</button>
-              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(2000)">+₹2,000</button>
+              <span style="font-size:0.85rem;color:var(--text-muted);">Quick Add (+10):</span>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(10)">+₹10</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(20)">+₹20</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(50)">+₹50</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(100)">+₹100</button>
             </div>
 
             <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
