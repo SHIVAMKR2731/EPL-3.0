@@ -62,7 +62,7 @@ async function loadDashboardMetrics() {
       document.getElementById('admin-sold-players').textContent = res.summary.sold_players;
       document.getElementById('admin-total-teams').textContent = res.summary.total_teams;
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // -------------------------------------------------------------------
@@ -249,7 +249,7 @@ async function adminStartAuctionForPlayer(playerId) {
       showToast(res.message, 'success');
       loadAdminAuctionState();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminPlaceBid() {
@@ -267,7 +267,7 @@ async function adminPlaceBid() {
       showToast(res.message, 'success');
       loadAdminAuctionState();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 function adminQuickAddBid(amount) {
@@ -292,7 +292,7 @@ async function adminResetTimer() {
       startAdminLocalTimer(30);
       loadAdminAuctionState();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminReAuctionUnsold() {
@@ -303,7 +303,7 @@ async function adminReAuctionUnsold() {
       showToast(res.message, 'success');
       loadAdminAuctionState();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminSellPlayer() {
@@ -314,7 +314,7 @@ async function adminSellPlayer() {
       showToast(res.message, 'success');
       loadAdminAuctionState();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminMarkUnsold() {
@@ -325,7 +325,7 @@ async function adminMarkUnsold() {
       showToast(res.message, 'warning');
       loadAdminAuctionState();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminTogglePause() {
@@ -335,7 +335,7 @@ async function adminTogglePause() {
       showToast(`Auction status: ${res.status}`, 'info');
       loadAdminAuctionState();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // -------------------------------------------------------------------
@@ -381,7 +381,7 @@ async function adminCreateSinglePlayerSubmit() {
   const branch = document.getElementById('new-player-branch') ? document.getElementById('new-player-branch').value : '';
   const batch = document.getElementById('new-player-batch') ? document.getElementById('new-player-batch').value : '';
   const position = document.getElementById('new-player-position') ? document.getElementById('new-player-position').value : '';
-  const basePrice = document.getElementById('new-player-baseprice') ? document.getElementById('new-player-baseprice').value : 500;
+  const basePrice = document.getElementById('new-player-baseprice') ? document.getElementById('new-player-baseprice').value : 20;
 
   try {
     const res = await apiRequest('/api/players/admin/create', 'POST', {
@@ -392,7 +392,7 @@ async function adminCreateSinglePlayerSubmit() {
       loadAdminPlayers();
       closeModal('create-player-modal');
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 let adminCachedTeams = [];
@@ -493,7 +493,7 @@ async function adminUploadExcelFile() {
       loadAdminPlayers();
       closeModal('excel-import-modal');
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminDeletePlayer(id) {
@@ -504,7 +504,7 @@ async function adminDeletePlayer(id) {
       showToast(res.message, 'info');
       loadAdminPlayers();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // -------------------------------------------------------------------
@@ -576,7 +576,7 @@ async function loadAdminTeams() {
         <button class="btn btn-outline btn-sm" onclick="adminDeleteTeam(${t.id})">Delete Team</button>
       </div>
     `).join('');
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminCreateTeamSubmit(e) {
@@ -591,7 +591,7 @@ async function adminCreateTeamSubmit(e) {
       loadAdminTeams();
       closeModal('create-team-modal');
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminDeleteTeam(id) {
@@ -602,7 +602,7 @@ async function adminDeleteTeam(id) {
       showToast(res.message, 'info');
       loadAdminTeams();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // -------------------------------------------------------------------
@@ -628,7 +628,7 @@ async function loadAdminMatches() {
         </td>
       </tr>
     `).join('');
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminCreateMatchSubmit(e) {
@@ -653,7 +653,7 @@ async function adminCreateMatchSubmit(e) {
       loadAdminMatches();
       closeModal('create-match-modal');
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // -------------------------------------------------------------------
@@ -686,7 +686,7 @@ async function loadAdminScoringPanel() {
     if (elAssistSelect) {
       elAssistSelect.innerHTML = `<option value="">-- No Assist --</option>` + allPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminStartLiveMatch() {
@@ -697,7 +697,7 @@ async function adminStartLiveMatch() {
       showToast('Match is now LIVE!', 'success');
       loadAdminScoringPanel();
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminRecordGoalSubmit() {
@@ -720,7 +720,7 @@ async function adminRecordGoalSubmit() {
       loadAdminScoringPanel();
       closeModal('record-goal-modal');
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 async function adminFinishMatch() {
@@ -731,7 +731,7 @@ async function adminFinishMatch() {
       showToast(res.message, 'success');
       setTimeout(() => window.location.href = '/admin/matches.html', 1000);
     }
-  } catch (err) {}
+  } catch (err) { }
 }
 
 // -------------------------------------------------------------------

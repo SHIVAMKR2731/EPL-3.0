@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,11 @@
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="/css/responsive.css">
 </head>
+
 <body data-admin-page="settings">
 
   <div class="admin-layout">
-    
+
     <!-- SIDEBAR -->
     <aside class="admin-sidebar">
       <div class="admin-brand">
@@ -32,28 +34,31 @@
 
     <!-- CONTENT -->
     <main class="admin-content">
-      
+
       <div style="margin-bottom:1.5rem;">
         <h1 style="font-size:2rem;">TOURNAMENT SETTINGS & RULES</h1>
-        <p style="color:var(--text-muted);">Configure tournament name, points rules, auction budget limits, and default player base prices.</p>
+        <p style="color:var(--text-muted);">Configure tournament name, points rules, auction budget limits, and default
+          player base prices.</p>
       </div>
 
       <div class="glass-card" style="max-width:700px;">
         <form onsubmit="event.preventDefault(); adminSaveSettingsSubmit();">
           <div class="form-group">
             <label>Tournament Name</label>
-            <input type="text" id="setting-tournament-name" class="form-control" value="EPL 3.0 College Football League" required>
+            <input type="text" id="setting-tournament-name" class="form-control" value="EPL 3.0 College Football League"
+              required>
           </div>
 
           <div class="form-group">
             <label>Tournament Dates</label>
-            <input type="text" id="setting-tournament-dates" class="form-control" value="August 10 - August 25, 2026" required>
+            <input type="text" id="setting-tournament-dates" class="form-control" value="August 10 - August 25, 2026"
+              required>
           </div>
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div class="form-group">
               <label>Default Team Budget (pts)</label>
-              <input type="number" id="setting-team-budget" class="form-control" value="10000" required>
+              <input type="number" id="setting-team-budget" class="form-control" value="2000" required>
             </div>
             <div class="form-group">
               <label>Default Player Base Price (pts)</label>
@@ -93,4 +98,5 @@
   <script src="/js/auth.js"></script>
   <script src="/js/admin.js"></script>
 </body>
+
 </html>
