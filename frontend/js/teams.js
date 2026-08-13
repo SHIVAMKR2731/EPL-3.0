@@ -25,7 +25,7 @@ async function loadTeamsList() {
           </div>
           <div>
             <div style="color:var(--text-muted);">BUDGET</div>
-            <div style="font-weight:800;font-size:1.1rem;color:var(--gold-accent);">₹${(t.remaining_budget || 0).toLocaleString()}</div>
+            <div style="font-weight:800;font-size:1.1rem;color:var(--gold-accent);">${(t.remaining_budget || 0).toLocaleString()} pts</div>
           </div>
         </div>
 
@@ -55,7 +55,7 @@ async function openTeamSquadModal(teamId) {
         <div>
           <h2 style="font-size:1.8rem;">${t.name}</h2>
           <p style="color:var(--text-muted);">Captain: ${t.captain_name} | Owner: ${t.owner_name}</p>
-          <p style="color:var(--cyan-accent);font-size:0.9rem;font-weight:700;">Remaining Budget: ₹${(t.remaining_budget || 0).toLocaleString()} | Squad Value: ₹${(t.total_squad_value || 0).toLocaleString()}</p>
+          <p style="color:var(--cyan-accent);font-size:0.9rem;font-weight:700;">Remaining Budget: ${(t.remaining_budget || 0).toLocaleString()} pts | Squad Value: ${(t.total_squad_value || 0).toLocaleString()} pts</p>
         </div>
       </div>
 
@@ -88,7 +88,7 @@ function renderPositionSquadGroup(title, players) {
             <img src="${p.image}" style="width:36px;height:36px;border-radius:50%;" alt="${p.name}">
             <div>
               <div style="font-weight:700;font-size:0.85rem;">${p.name}</div>
-              <div style="font-size:0.75rem;color:var(--text-muted);">${p.branch} (${p.batch}) | ₹${p.final_price || p.base_price}</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">${p.branch} (${p.batch}) | ${p.final_price || p.base_price} pts</div>
             </div>
           </div>
         `).join('')}

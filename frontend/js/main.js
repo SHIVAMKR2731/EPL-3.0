@@ -145,7 +145,7 @@ function updateGlobalTicker(player, bidAmount, team, status) {
   if (player) banner.dataset.playerName = player.name;
 
   const tName = team ? team.name : 'No Bids';
-  const bidVal = bidAmount ? `₹${bidAmount.toLocaleString()}` : 'Base Price';
+  const bidVal = bidAmount ? `${bidAmount.toLocaleString()} pts` : 'Base Price';
 
   banner.innerHTML = `
     <span class="pulse-dot" style="display:inline-block;width:10px;height:10px;background:#ef4444;border-radius:50%;"></span>

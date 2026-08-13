@@ -140,7 +140,7 @@ async function loadAdminAuctionState() {
             <div>
               <h2 style="font-size:1.8rem;">${current.name}</h2>
               <p style="color:var(--text-muted);">${current.position} | ${current.branch} (${current.batch})</p>
-              <p style="color:var(--gold-accent);font-weight:700;margin-top:0.25rem;">Base Price: ₹${current.base_price}</p>
+              <p style="color:var(--gold-accent);font-weight:700;margin-top:0.25rem;">Base Price: ${current.base_price} pts</p>
             </div>
           </div>
         `;
@@ -159,7 +159,7 @@ async function loadAdminAuctionState() {
             <div>
               <div class="next-player-tag">🔒 NEXT IN QUEUE (ADMIN PRIVILEGED VIEW)</div>
               <div style="font-weight:700;font-size:1.1rem;">${next.name}</div>
-              <div style="font-size:0.8rem;color:var(--text-muted);">${next.position} | ${next.branch} (${next.batch}) | Base: ₹${next.base_price}</div>
+              <div style="font-size:0.8rem;color:var(--text-muted);">${next.position} | ${next.branch} (${next.batch}) | Base: ${next.base_price} pts</div>
             </div>
           </div>
         `;
@@ -173,7 +173,7 @@ async function loadAdminAuctionState() {
     const elTeam = document.getElementById('admin-current-team');
     const elStatus = document.getElementById('admin-auction-status');
 
-    if (elBid) elBid.textContent = `₹${(currentBid || 0).toLocaleString()}`;
+    if (elBid) elBid.textContent = `${(currentBid || 0).toLocaleString()} pts`;
     if (elTeam) elTeam.textContent = currentTeam ? currentTeam.name : 'No Bids';
     if (elStatus) elStatus.textContent = status;
 
@@ -187,7 +187,7 @@ async function loadAdminAuctionState() {
     const elTeamSelect = document.getElementById('admin-bid-team-select');
     if (elTeamSelect && res.teams) {
       elTeamSelect.innerHTML = res.teams.map(t => `
-        <option value="${t.id}">${t.name} (Bal: ₹${t.remaining_budget.toLocaleString()})</option>
+        <option value="${t.id}">${t.name} (Bal: ${t.remaining_budget.toLocaleString()} pts)</option>
       `).join('');
     }
 
@@ -234,7 +234,7 @@ function renderAdminUnsoldTable(unsold) {
     <tr>
       <td style="font-weight:700;">${p.name}</td>
       <td>${p.position}</td>
-      <td>Base: ₹${p.base_price}</td>
+      <td>Base: ${p.base_price} pts</td>
       <td>
         <button class="btn btn-gold btn-sm" onclick="adminStartAuctionForPlayer(${p.id})">Re-Auction 🔄</button>
       </td>
@@ -361,7 +361,7 @@ async function loadAdminPlayers() {
         <td style="color:var(--text-muted);">${p.contact_number || 'N/A'}</td>
         <td>${p.branch} (${p.batch})</td>
         <td>${p.position}</td>
-        <td>₹${p.base_price}</td>
+        <td>${p.base_price} pts</td>
         <td><span class="badge" style="background:rgba(255,255,255,0.05);">${p.status}</span></td>
         <td>${p.team_name || 'Free Agent'}</td>
         <td>
@@ -572,7 +572,7 @@ async function loadAdminTeams() {
             <p style="font-size:0.8rem;color:var(--text-muted);">Captain: ${t.captain_name} | Owner: ${t.owner_name}</p>
           </div>
         </div>
-        <p style="font-size:0.85rem;margin-bottom:1rem;">Remaining Budget: <strong style="color:var(--gold-accent);">₹${t.remaining_budget.toLocaleString()}</strong></p>
+        <p style="font-size:0.85rem;margin-bottom:1rem;">Remaining Budget: <strong style="color:var(--gold-accent);">${t.remaining_budget.toLocaleString()} pts</strong></p>
         <button class="btn btn-outline btn-sm" onclick="adminDeleteTeam(${t.id})">Delete Team</button>
       </div>
     `).join('');

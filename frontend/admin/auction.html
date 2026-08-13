@@ -63,17 +63,17 @@
                 <option value="">Select Bidding Team...</option>
               </select>
 
-              <input type="number" id="admin-bid-amount-input" class="form-control" placeholder="Bid (₹)" value="20" step="10">
+              <input type="number" id="admin-bid-amount-input" class="form-control" placeholder="Bid (pts)" value="20" step="10">
 
               <button class="btn btn-primary" onclick="adminPlaceBid()">PLACE BID 🔨</button>
             </div>
 
             <div style="display:flex;gap:0.5rem;margin-bottom:1rem;align-items:center;">
               <span style="font-size:0.85rem;color:var(--text-muted);">Quick Add (+10):</span>
-              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(10)">+₹10</button>
-              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(20)">+₹20</button>
-              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(50)">+₹50</button>
-              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(100)">+₹100</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(10)">+10 pts</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(20)">+20 pts</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(50)">+50 pts</button>
+              <button class="btn btn-outline" style="padding:0.3rem 0.6rem;font-size:0.8rem;" onclick="adminQuickAddBid(100)">+100 pts</button>
             </div>
 
             <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
@@ -90,7 +90,7 @@
         <!-- RIGHT: BID STATUS DISPLAY -->
         <div class="glass-card" style="text-align:center;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(circle at center, rgba(245,158,11,0.08) 0%, var(--bg-card-solid) 80%);">
           <div style="font-size:0.85rem;color:var(--text-muted);text-transform:uppercase;">CURRENT BID</div>
-          <div id="admin-current-bid" style="font-family:var(--font-heading);font-size:3.5rem;font-weight:900;color:#fff;">₹0</div>
+          <div id="admin-current-bid" style="font-family:var(--font-heading);font-size:3.5rem;font-weight:900;color:#fff;">0 pts</div>
           
           <div style="margin:1rem 0;font-size:1.1rem;font-weight:700;color:var(--primary-green);" id="admin-current-team">
             No Bids

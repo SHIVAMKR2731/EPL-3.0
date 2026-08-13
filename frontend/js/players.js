@@ -37,7 +37,7 @@ async function loadPlayersList() {
         </div>
         <div style="border-top:1px solid var(--border-color);padding-top:0.75rem;font-size:0.85rem;">
           <div style="color:var(--text-muted);">Status: <strong style="color:${p.status === 'SOLD' ? 'var(--primary-green)' : (p.status === 'UNSOLD' ? 'var(--crimson-accent)' : 'var(--gold-accent)')};">${p.status}</strong></div>
-          ${p.team_name ? `<div style="font-weight:700;color:var(--cyan-accent);margin-top:0.25rem;">Team: ${p.team_name} (₹${p.final_price})</div>` : `<div style="color:var(--text-muted);margin-top:0.25rem;">Base Price: ₹${p.base_price}</div>`}
+          ${p.team_name ? `<div style="font-weight:700;color:var(--cyan-accent);margin-top:0.25rem;">Team: ${p.team_name} (${p.final_price} pts)</div>` : `<div style="color:var(--text-muted);margin-top:0.25rem;">Base Price: ${p.base_price} pts</div>`}
         </div>
       </div>
     `).join('');

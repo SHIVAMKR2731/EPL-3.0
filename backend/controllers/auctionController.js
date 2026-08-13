@@ -233,11 +233,11 @@ async function placeBid(req, res) {
 
     // Validations
     if (newBid <= auction.current_bid && auction.current_team_id !== null) {
-      return res.status(400).json({ success: false, message: `Bid must be greater than current bid (₹${auction.current_bid})` });
+      return res.status(400).json({ success: false, message: `Bid must be greater than current bid (${auction.current_bid} pts)` });
     }
 
     if (newBid > team.remaining_budget) {
-      return res.status(400).json({ success: false, message: `Insufficient team budget! Remaining: ₹${team.remaining_budget}` });
+      return res.status(400).json({ success: false, message: `Insufficient team budget! Remaining: ${team.remaining_budget} pts` });
     }
 
     // Record bid in database
@@ -252,7 +252,7 @@ async function placeBid(req, res) {
       [newBid, team_id]
     );
 
-    await logAudit(req.admin.username, 'PLACE_BID', `Bid ₹${newBid} placed by ${team.name} for player ID ${auction.current_player_id}`);
+    await logAudit(req.admin.username, 'PLACE_BID', `Bid ${newBid} pts placed by ${team.name} for player ID ${auction.current_player_id}`);
 
     if (ioInstance) {
       ioInstance.emit('bid_updated', {
@@ -264,7 +264,7 @@ async function placeBid(req, res) {
 
     res.json({
       success: true,
-      message: `Bid ₹${newBid} placed for ${team.name}`,
+      message: `Bid ${newBid} pts placed for ${team.name}`,
       current_bid: newBid,
       team: { id: team.id, name: team.name }
     });
@@ -306,7 +306,7 @@ async function sellPlayer(req, res) {
       "UPDATE auctions SET status = 'IDLE', current_player_id = NULL, current_bid = 0, current_team_id = NULL WHERE id = 1"
     );
 
-    await logAudit(req.admin.username, 'SELL_PLAYER', `Sold ${player.name} to ${team.name} for ₹${finalPrice}`);
+    await logAudit(req.admin.username, 'SELL_PLAYER', `Sold ${player.name} to ${team.name} for ${finalPrice} pts`);
 
     const resultPayload = {
       player: {
@@ -332,7 +332,7 @@ async function sellPlayer(req, res) {
 
     res.json({
       success: true,
-      message: `Player ${player.name} sold to ${team.name} for ₹${finalPrice}!`,
+      message: `Player ${player.name} sold to ${team.name} for ${finalPrice} pts!`,
       sold: resultPayload
     });
   } catch (err) {

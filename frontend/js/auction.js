@@ -52,7 +52,7 @@ function renderCurrentPlayer(player) {
       </div>
       <div class="base-price-box">
         <div class="base-price-label">BASE PRICE</div>
-        <div class="base-price-val">₹${player.base_price}</div>
+        <div class="base-price-val">${player.base_price} pts</div>
       </div>
     </div>
   `;
@@ -69,7 +69,7 @@ function renderBidStage(currentBid, currentTeam, status) {
 
   if (elBid) {
     const oldVal = elBid.textContent;
-    const newVal = `₹${(currentBid || 0).toLocaleString()}`;
+    const newVal = `${(currentBid || 0).toLocaleString()} pts`;
     elBid.textContent = newVal;
 
     if (oldVal !== newVal) {
@@ -139,7 +139,7 @@ function renderTeamBudgets(teams, activeTeamId) {
         <img src="${t.logo}" class="team-logo-sm" alt="${t.name}">
         <span class="team-title">${t.name}</span>
       </div>
-      <div class="budget-val">₹${(t.remaining_budget || 0).toLocaleString()}</div>
+      <div class="budget-val">${(t.remaining_budget || 0).toLocaleString()} pts</div>
     </div>
   `).join('');
 }
@@ -158,7 +158,7 @@ function renderSoldPlayers(soldList) {
       <img src="${p.image}" class="mini-img" alt="${p.name}" referrerpolicy="no-referrer">
       <div class="mini-info">
         <div class="mini-name">${p.name}</div>
-        <div class="mini-sub">${p.position} | <strong style="color:var(--primary-green);">${p.team_name}</strong> (₹${p.final_price})</div>
+        <div class="mini-sub">${p.position} | <strong style="color:var(--primary-green);">${p.team_name}</strong> (${p.final_price} pts)</div>
       </div>
     </div>
   `).join('');
@@ -178,7 +178,7 @@ function renderUnsoldPlayers(unsoldList) {
       <img src="${p.image}" class="mini-img" alt="${p.name}" referrerpolicy="no-referrer">
       <div class="mini-info">
         <div class="mini-name">${p.name}</div>
-        <div class="mini-sub">${p.position} | Base: ₹${p.base_price}</div>
+        <div class="mini-sub">${p.position} | Base: ${p.base_price} pts</div>
       </div>
     </div>
   `).join('');
@@ -213,7 +213,7 @@ function setupSocketListeners() {
 
   socket.on('player_sold', (data) => {
     isAuctionRunning = false;
-    showToast(`🟢 SOLD! ${data.player.name} sold to ${data.team.name} for ₹${data.player.final_price}!`, 'success');
+    showToast(`🟢 SOLD! ${data.player.name} sold to ${data.team.name} for ${data.player.final_price} pts!`, 'success');
     loadAuctionState();
   });
 
